@@ -16,6 +16,7 @@ This page is generated manually from each module's package metadata and changelo
 | Encore | 0.1.0 | package.json |
 | Marquee | 0.1.0 | package.json |
 | @get-coral/jellyfin | 1.2.0 | package.json |
+| create-coral | 0.1.0 | package.json |
 | Coral Docs | 0.0.1 | docs/package.json |
 
 ## Notes

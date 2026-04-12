@@ -28,6 +28,16 @@ Instead of a monolithic media center, Coral provides specialized, best-in-class 
 
 ## Getting Started
 
+If you want to build a new Coral module, start with the official CLI:
+
+```bash
+pnpm create coral@latest
+npm create coral@latest
+bun create coral@latest
+```
+
+That bootstraps the current Coral template with TypeScript, Biome, and release automation already wired in. For the full flow, see [create-coral CLI](/getting-started/create-coral/).
+
 Choose a module to explore:
 
 - [**Aurora**](/modules/aurora/) - Start building with the video client
@@ -50,4 +60,5 @@ All Coral modules are built with:
 
 - Visit [getcoral.dev](https://getcoral.dev) for the main website
 - Explore the [Jellyfin API Client](/libraries/jellyfin/) for building with the API
+- Use the [create-coral CLI guide](/getting-started/create-coral/) to scaffold a new module
 - See [Contributing](/contributing/getting-started/) to build your own module

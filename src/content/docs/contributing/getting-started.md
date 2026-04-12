@@ -9,6 +9,16 @@ The Coral ecosystem welcomes contributions from the community! Whether you're fi
 
 ## Quick Start
 
+If you want to start a brand new Coral module instead of contributing to an existing one, scaffold it first:
+
+```bash
+pnpm create coral@latest my-module
+npm create coral@latest my-module
+bun create coral@latest my-module
+```
+
+That gives you the standard Coral app template with TypeScript, Biome, and release automation already configured. The dedicated [create-coral CLI guide](/getting-started/create-coral/) has the full setup flow.
+
 ### 1. Pick a Project
 
 Choose where you want to contribute:
@@ -155,7 +165,7 @@ By contributing, you agree to license your contributions under the project's lic
 
 ## Building a New Module
 
-Want to create a new Coral module? See [Project Templates](/contributing/project-templates/).
+Want to create a new Coral module? Start with `pnpm create coral@latest`, then see [Project Templates](/contributing/project-templates/).
 
 ## Recognition
 

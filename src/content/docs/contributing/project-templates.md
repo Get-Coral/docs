@@ -7,6 +7,24 @@ description: Building new Coral modules with project templates
 
 Coral provides templates to help you build new modules. All Coral modules follow the same architecture and conventions.
 
+## Recommended: use the CLI
+
+The fastest path is the official scaffolder:
+
+```bash
+pnpm create coral@latest
+npm create coral@latest
+bun create coral@latest
+```
+
+Or provide the module name up front:
+
+```bash
+pnpm create coral@latest my-module
+```
+
+The CLI pulls the latest `template/`, renames the module, and keeps the standard Coral TypeScript, Biome, and release automation setup intact. See [create-coral CLI](/getting-started/create-coral/) for the dedicated command reference.
+
 ## Template Repositories
 
 ### Coral Module Template
@@ -29,7 +47,16 @@ The standard template for building a new Coral module with TanStack Start, React
 
 ## Creating Your Module
 
-### 1. Use the Template
+### 1. Scaffold from the Template
+
+Recommended:
+
+```bash
+pnpm create coral@latest my-module
+cd my-module
+```
+
+Manual fallback:
 
 ```bash
 # Click "Use this template" on GitHub
@@ -40,7 +67,9 @@ cd my-module
 
 ### 2. Rename Your Module
 
-Replace `coral-module` throughout:
+If you used the CLI, this step is already handled for you.
+
+If you cloned manually, replace `coral-module` throughout:
 
 ```bash
 # In package.json
@@ -124,7 +153,7 @@ pnpm build        # Build for production
 pnpm preview      # Preview production build
 pnpm lint         # Run linter
 pnpm format       # Format code
-pnpm type-check   # Check types
+pnpm typecheck    # Check types
 ```
 
 ### Using TanStack Start
@@ -253,7 +282,7 @@ Check release notes for breaking changes.
 
 ## Next Steps
 
-1. Clone or use the template
+1. Run `pnpm create coral@latest`
 2. Rename your module
 3. Build your feature
 4. Deploy and share
