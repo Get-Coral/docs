@@ -30,6 +30,11 @@ export default defineConfig({
           label: 'Getting Started',
           items: [
             { label: 'Introduction', slug: 'getting-started/introduction' },
+            {
+              label: 'create-coral CLI',
+              slug: 'getting-started/create-coral',
+              badge: { text: '0.1.0', variant: 'success' },
+            },
           ],
         },
         {
