@@ -7,6 +7,12 @@ description: A premium Jellyfin frontend built with TanStack Start and React
 
 Aurora is a premium Jellyfin frontend built with TanStack Start and React. It keeps Jellyfin as the source of truth while layering on a more cinematic home experience, richer detail views, embedded playback, favorites, genre browsing, and translation-ready UI foundations.
 
+## Version
+
+- Current release: **1.4.0**
+- Status: `Unreleased` changes are present on main
+- GHCR image: [`ghcr.io/get-coral/aurora-ui`](https://ghcr.io/get-coral/aurora-ui)
+
 ### Highlights
 
 - **Jellyfin-powered home screen** with featured, continue watching, favorites, and recommendation rails

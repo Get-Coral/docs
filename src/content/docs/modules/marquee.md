@@ -7,6 +7,11 @@ description: A Coral module template for building new applications
 
 Marquee is a Coral ecosystem module built on TanStack Start, Tailwind v4, and the Jellyfin API. It serves as a template and foundation for building new Coral applications.
 
+## Version
+
+- Current version: **0.1.0**
+- GHCR image: [`ghcr.io/get-coral/marquee`](https://ghcr.io/get-coral/marquee)
+
 ## Getting Started
 
 ### Prerequisites

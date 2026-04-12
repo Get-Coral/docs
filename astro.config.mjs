@@ -35,17 +35,47 @@ export default defineConfig({
         {
           label: 'Modules',
           items: [
-            { label: 'Aurora', slug: 'modules/aurora' },
-            { label: 'Fathom', slug: 'modules/fathom' },
-            { label: 'Librarian', slug: 'modules/librarian' },
-            { label: 'KAPOW', slug: 'modules/kapow' },
-            { label: 'Encore', slug: 'modules/encore' },
-            { label: 'Marquee', slug: 'modules/marquee' },
+            {
+              label: 'Aurora',
+              slug: 'modules/aurora',
+              badge: { text: '1.4.0', variant: 'tip' },
+            },
+            {
+              label: 'Fathom',
+              slug: 'modules/fathom',
+              badge: { text: '0.1.0', variant: 'note' },
+            },
+            {
+              label: 'Librarian',
+              slug: 'modules/librarian',
+              badge: { text: '0.1.0', variant: 'note' },
+            },
+            {
+              label: 'KAPOW',
+              slug: 'modules/kapow',
+              badge: { text: '1.0.0', variant: 'tip' },
+            },
+            {
+              label: 'Encore',
+              slug: 'modules/encore',
+              badge: { text: '0.1.0', variant: 'note' },
+            },
+            {
+              label: 'Marquee',
+              slug: 'modules/marquee',
+              badge: { text: '0.1.0', variant: 'note' },
+            },
           ],
         },
         {
           label: 'Libraries',
-          items: [{ label: 'Jellyfin API Client', slug: 'libraries/jellyfin' }],
+          items: [
+            {
+              label: 'Jellyfin API Client',
+              slug: 'libraries/jellyfin',
+              badge: { text: '1.2.0', variant: 'success' },
+            },
+          ],
         },
         {
           label: 'Contributing',
