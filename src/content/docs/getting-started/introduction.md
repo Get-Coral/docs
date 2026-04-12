@@ -34,6 +34,8 @@ Choose a module to explore:
 - [**Fathom**](/modules/fathom/) - Set up your reading interface
 - [**Librarian**](/modules/librarian/) - Organize your media
 - [**KAPOW**](/modules/kapow/) - Create the ultimate karaoke experience
+- [**Encore**](/modules/encore/) - Template for building custom modules
+- [**Marquee**](/modules/marquee/) - Template for building custom modules
 
 ## Development
 

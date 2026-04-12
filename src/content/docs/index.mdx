@@ -1,45 +1,97 @@
 ---
-title: Welcome to Coral Docs
+title: Coral Docs
 description: Documentation for the Coral ecosystem of Jellyfin modules
 template: splash
 hero:
-  tagline: Build with the Coral ecosystem of Jellyfin modules
-  image:
-    file: ../../assets/houston.webp
+  tagline: Purpose-built interfaces for your self-hosted Jellyfin media
   actions:
     - text: Get Started
       link: /getting-started/introduction/
       icon: right-arrow
-    - text: Explore Modules
+    - text: Explore All Modules
       link: /modules/aurora/
       icon: rocket
+      variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
 
-## Featured Modules
+## 🎯 Featured Modules
 
-<CardGrid>
+<CardGrid stagger>
 	<Card title="Aurora" icon="video">
-		A premium Jellyfin frontend built with TanStack Start and React. Cinematic home experience with playlists, favorites, and more.
+		Premium video frontend. Cinematic home experience, rich detail views, favorites, and smart recommendations.
 	</Card>
 	<Card title="Fathom" icon="open-book">
-		A reading module for Jellyfin. Books, manga, comics, PDFs in a calm, cover-first interface.
+		Elegant reading interface. Books, manga, comics, PDFs in a cover-first, distraction-free design.
 	</Card>
-	<Card title="Librarian" icon="puzzle">
-		Organize, enrich, and maintain your media libraries with advanced media hygiene tools.
+	<Card title="Librarian" icon="setting">
+		Media management hub. Organize, enrich, deduplicate, and maintain your entire library.
 	</Card>
 	<Card title="KAPOW" icon="star">
-		Comic-book karaoke queue manager. Hosts create rooms, guests search songs and vote.
+		Interactive karaoke hub. Create rooms, search songs, vote as a group, and manage playback.
 	</Card>
 </CardGrid>
 
-## The Coral Ecosystem
+## Why Coral?
 
-Coral is a collection of independent, modular interfaces for [Jellyfin](https://jellyfin.org/) — your self-hosted media system. Each module is purpose-built for a specific media type or experience.
+Most media centers try to do *everything*. Coral does one thing really well — provide beautiful, purpose-built interfaces for each type of content.
 
-All modules are built with:
-- **TanStack Start** for modern server-side rendering
-- **Tailwind CSS v4** for styling
-- **Jellyfin API** as the backend
-- **TypeScript** for type safety
+**Choose what you need:**
+- Run Aurora for movies and shows
+- Add Fathom for your reading library
+- Use Librarian to manage it all
+- Deploy KAPOW for group entertainment
+- Mix and match what works for you
+
+**Built for self-hosters:**
+- Keep Jellyfin as your source of truth
+- No duplicated data, no external databases
+- Local-first where possible
+- Full control, full privacy
+
+## 🏗️ Built on Modern Tech
+
+Every Coral module is crafted with the latest tools:
+
+<CardGrid>
+	<Card title="TanStack Start" icon="rocket">
+		Full-stack React framework with server-side rendering and modern DX.
+	</Card>
+	<Card title="Tailwind CSS v4" icon="palette">
+		Modern utility-first styling with responsive design and dark mode.
+	</Card>
+	<Card title="TypeScript" icon="approve">
+		Type-safe code across frontend and backend for confidence and clarity.
+	</Card>
+	<Card title="Jellyfin API" icon="log">
+		Direct Jellyfin integration keeps your data where it belongs — on your server.
+	</Card>
+</CardGrid>
+
+## 🔧 Building with Coral
+
+Interested in creating your own module?
+
+- Start with [Project Templates](/contributing/project-templates/) for a pre-configured foundation
+- Check [Contributing](/contributing/getting-started/) for setup and best practices
+- Explore [Encore](/modules/encore/) or [Marquee](/modules/marquee/) as template references
+- Use the [Jellyfin API Client](/libraries/jellyfin/) for seamless Jellyfin integration
+
+## 📦 Templates & Tools
+
+<CardGrid>
+	<Card title="Encore" icon="rocket">
+		Template module for building new Coral applications with TanStack Start.
+	</Card>
+	<Card title="Marquee" icon="rocket">
+		Another template reference implementation for custom modules.
+	</Card>
+	<Card title="Jellyfin Client" icon="external">
+		Type-safe TypeScript client library for the Jellyfin API.
+	</Card>
+</CardGrid>
+
+<Aside type="tip">
+All Coral modules are open source and self-hosted. No subscriptions, no tracking, just your media your way.
+</Aside>
