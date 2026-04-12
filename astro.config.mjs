@@ -14,6 +14,10 @@ export default defineConfig({
       title: 'Coral Docs',
       description: 'Documentation for the Coral ecosystem of Jellyfin modules',
       customCss: ['./src/styles.css'],
+      expressiveCode: {
+        themes: ['github-dark'],
+        useStarlightDarkModeSwitch: false,
+      },
       social: [
         {
           icon: 'github',
