@@ -4,21 +4,40 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
+	site: 'https://docs.getcoral.dev',
 	integrations: [
 		starlight({
-			title: 'My Docs',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
+			title: 'Coral Docs',
+			description: 'Documentation for the Coral ecosystem of Jellyfin modules',
+			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/Get-Coral' }],
 			sidebar: [
 				{
-					label: 'Guides',
+					label: 'Getting Started',
 					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
+						{ label: 'Introduction', slug: 'getting-started/introduction' },
 					],
 				},
 				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
+					label: 'Modules',
+					items: [
+						{ label: 'Aurora', slug: 'modules/aurora' },
+						{ label: 'Fathom', slug: 'modules/fathom' },
+						{ label: 'Librarian', slug: 'modules/librarian' },
+						{ label: 'KAPOW', slug: 'modules/kapow' },
+					],
+				},
+				{
+					label: 'Libraries',
+					items: [
+						{ label: 'Jellyfin API Client', slug: 'libraries/jellyfin' },
+					],
+				},
+				{
+					label: 'Contributing',
+					items: [
+						{ label: 'Get Started', slug: 'contributing/getting-started' },
+						{ label: 'Project Templates', slug: 'contributing/project-templates' },
+					],
 				},
 			],
 		}),
