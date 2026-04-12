@@ -1,7 +1,4 @@
 {
-  "env": {
-    "SITE_URL": "@docs-site-url"
-  },
   "buildCommand": "pnpm run build",
   "installCommand": "pnpm install",
   "outputDirectory": "./dist"
