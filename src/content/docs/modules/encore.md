@@ -1,6 +1,6 @@
 ---
 title: Encore
-description: A Coral module template for building new applications
+description: Moderated guest music requests for house-party mode
 ---
 
 ## Encore

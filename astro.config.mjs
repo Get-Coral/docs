@@ -73,6 +73,10 @@ export default defineConfig({
           label: 'Libraries',
           items: [
             {
+              label: 'Coral UI',
+              slug: 'libraries/coral-ui',
+            },
+            {
               label: 'Jellyfin API Client',
               slug: 'libraries/jellyfin',
             },

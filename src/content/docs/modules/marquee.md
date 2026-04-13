@@ -1,6 +1,6 @@
 ---
 title: Marquee
-description: A Coral module template for building new applications
+description: Ambient now-playing display for Jellyfin spaces
 ---
 
 ## Marquee
