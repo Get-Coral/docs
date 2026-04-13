@@ -73,6 +73,5 @@ The CLI is the recommended path. Manual cloning of `Get-Coral/template` is mainl
 
 - [Project Templates](/contributing/project-templates/)
 - [Contributing](/contributing/getting-started/)
-- [Versions](/getting-started/versions/)
 - [create-coral on npm](https://www.npmjs.com/package/create-coral)
 - [create-coral on GitHub](https://github.com/Get-Coral/create-coral)

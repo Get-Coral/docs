@@ -44,4 +44,3 @@ npm install @get-coral/jellyfin
 
 - [create-coral CLI](/getting-started/create-coral/)
 - [Jellyfin API Client](/libraries/jellyfin/)
-- [Versions](/getting-started/versions/)

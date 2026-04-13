@@ -33,7 +33,6 @@ export default defineConfig({
             {
               label: 'create-coral CLI',
               slug: 'getting-started/create-coral',
-              badge: { text: '1.0.3', variant: 'success' },
             },
           ],
         },
@@ -43,32 +42,26 @@ export default defineConfig({
             {
               label: 'Aurora',
               slug: 'modules/aurora',
-              badge: { text: '1.4.0', variant: 'tip' },
             },
             {
               label: 'Fathom',
               slug: 'modules/fathom',
-              badge: { text: '0.1.0', variant: 'note' },
             },
             {
               label: 'Librarian',
               slug: 'modules/librarian',
-              badge: { text: '0.1.0', variant: 'note' },
             },
             {
               label: 'KAPOW',
               slug: 'modules/kapow',
-              badge: { text: '1.0.0', variant: 'tip' },
             },
             {
               label: 'Encore',
               slug: 'modules/encore',
-              badge: { text: '0.1.0', variant: 'note' },
             },
             {
               label: 'Marquee',
               slug: 'modules/marquee',
-              badge: { text: '0.1.0', variant: 'note' },
             },
           ],
         },
@@ -78,12 +71,10 @@ export default defineConfig({
             {
               label: 'Jellyfin API Client',
               slug: 'libraries/jellyfin',
-              badge: { text: '1.4.0', variant: 'success' },
             },
             {
               label: 'NPM Packages',
               slug: 'libraries/npm-packages',
-              badge: { text: 'new', variant: 'note' },
             },
           ],
         },
