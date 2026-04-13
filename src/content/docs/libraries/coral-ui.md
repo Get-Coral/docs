@@ -7,13 +7,6 @@ description: Shared React components and design tokens for Coral apps
 
 `@get-coral/ui` is the shared design-system package for Coral repositories. It provides reusable React components and a common style token layer so modules can ship faster while keeping a consistent UI language.
 
-## Version
-
-- Current version: **0.1.0**
-
-[![npm](https://img.shields.io/npm/v/@get-coral/ui?style=flat-square&color=ff6b6b)](https://www.npmjs.com/package/@get-coral/ui)
-[![License: MIT](https://img.shields.io/badge/License-MIT-2dd4bf?style=flat-square)](https://opensource.org/licenses/MIT)
-
 ## Installation
 
 ```bash

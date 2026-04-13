@@ -7,11 +7,6 @@ description: A torrent downloader for Jellyfin-adjacent media workflows with que
 
 Tide is Coral's torrent download manager. It gives you a cleaner, self-hosted interface for adding torrents, managing queue order, limiting active downloads and seeders, adjusting file priorities, and inspecting live swarm health with an expandable piece map.
 
-## Version
-
-- Current version: **1.0.1**
-- GHCR image: [`ghcr.io/get-coral/tide`](https://ghcr.io/get-coral/tide)
-
 ## Highlights
 
 - **Quick add workflow** from the home board, including clipboard paste for copied magnet links

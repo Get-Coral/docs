@@ -7,13 +7,13 @@ Coral publishes reusable packages for app scaffolding, Jellyfin integration, and
 
 ## Package Catalog
 
-| Package | Current Version | Purpose |
-|---|---:|---|
-| [create-coral](https://www.npmjs.com/package/create-coral) | 1.0.3 | CLI to scaffold a new Coral module from the official template |
-| [@get-coral/ui](https://www.npmjs.com/package/@get-coral/ui) | 0.1.0 | Shared React UI component library and design tokens for Coral apps |
-| [@get-coral/jellyfin](https://www.npmjs.com/package/@get-coral/jellyfin) | 1.4.0 | Typed Jellyfin API client for Node, browser, and edge runtimes |
-| [@get-coral/tsconfig](https://www.npmjs.com/package/@get-coral/tsconfig) | 0.2.0 | Shared TypeScript config presets for Coral repositories |
-| [@get-coral/biome-config](https://www.npmjs.com/package/@get-coral/biome-config) | 0.2.0 | Shared Biome lint/format configuration for Coral repositories |
+| Package | Purpose |
+|---|---|
+| [create-coral](https://www.npmjs.com/package/create-coral) | CLI to scaffold a new Coral module from the official template |
+| [@get-coral/ui](https://www.npmjs.com/package/@get-coral/ui) | Shared React UI component library and design tokens for Coral apps |
+| [@get-coral/jellyfin](https://www.npmjs.com/package/@get-coral/jellyfin) | Typed Jellyfin API client for Node, browser, and edge runtimes |
+| [@get-coral/tsconfig](https://www.npmjs.com/package/@get-coral/tsconfig) | Shared TypeScript config presets for Coral repositories |
+| [@get-coral/biome-config](https://www.npmjs.com/package/@get-coral/biome-config) | Shared Biome lint/format configuration for Coral repositories |
 
 ## Installation
 
@@ -53,4 +53,3 @@ npm install @get-coral/ui
 
 - [create-coral CLI](/getting-started/create-coral/)
 - [Jellyfin API Client](/libraries/jellyfin/)
-- [Versions](/getting-started/versions/)

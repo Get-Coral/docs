@@ -7,11 +7,6 @@ description: Comic-book karaoke queue manager for group entertainment
 
 KAPOW is a comic-book karaoke queue manager. Hosts spin up a room, guests scan a QR code and search for tracks, the crowd votes songs up the queue, and the host runs the night from a dedicated control booth.
 
-## Version
-
-- Current release: **1.0.0**
-- GHCR image: [`ghcr.io/get-coral/kapow`](https://ghcr.io/get-coral/kapow)
-
 Perfect for parties, events, and group entertainment nights.
 
 ### How It Works

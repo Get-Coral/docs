@@ -7,13 +7,6 @@ description: A fully typed TypeScript client for the Jellyfin API
 
 A modern, fetch-based Jellyfin API client with full TypeScript types. No dependencies. Works in Node.js, browsers, and edge runtimes (Cloudflare Workers, Vercel Edge, etc).
 
-## Version
-
-- Current version: **1.4.0**
-
-[![npm](https://img.shields.io/npm/v/@get-coral/jellyfin?style=flat-square&color=ff6b6b)](https://www.npmjs.com/package/@get-coral/jellyfin)
-[![License: MIT](https://img.shields.io/badge/License-MIT-2dd4bf?style=flat-square)](https://opensource.org/licenses/MIT)
-
 ## Installation
 
 ```bash

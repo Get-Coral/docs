@@ -7,11 +7,6 @@ description: A Coral module for organizing and enriching self-hosted media libra
 
 Librarian is the Coral module focused on media hygiene and enrichment. It provides tools for organizing, enriching, and maintaining your self-hosted Jellyfin media libraries.
 
-## Version
-
-- Current version: **0.1.0**
-- GHCR image: [`ghcr.io/get-coral/librarian`](https://ghcr.io/get-coral/librarian)
-
 Keep your media organized, metadata enriched, and everything running smoothly.
 
 ### What It Does

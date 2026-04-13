@@ -7,11 +7,6 @@ description: A reading module for Jellyfin. Books, manga, comics, and PDFs in a 
 
 Fathom is the Coral reading room. It connects to Jellyfin and turns reading libraries into a cleaner browsing experience with a featured shelf, recent additions, library browsing, collection browsing, and rich title details with metadata.
 
-## Version
-
-- Current version: **0.1.0**
-- GHCR image: [`ghcr.io/get-coral/fathom`](https://ghcr.io/get-coral/fathom)
-
 A cover-first interface designed for a calm, focused reading experience.
 
 ### What It Is
