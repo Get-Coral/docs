@@ -52,5 +52,5 @@ npm install @get-coral/ui
 ## Related
 
 - [create-coral CLI](/getting-started/create-coral/)
-- [Coral UI](/libraries/coral-ui/)
 - [Jellyfin API Client](/libraries/jellyfin/)
+- [Versions](/getting-started/versions/)
