@@ -63,6 +63,10 @@ export default defineConfig({
               label: 'Marquee',
               slug: 'modules/marquee',
             },
+            {
+              label: 'Tide',
+              slug: 'modules/tide',
+            },
           ],
         },
         {
