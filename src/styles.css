@@ -367,3 +367,163 @@ strong {
   color: #f0ede8;
   font-weight: 600;
 }
+
+/* Mobile sidebar when expanded */
+#starlight__sidebar,
+.sidebar-pane {
+  background-color: #0a1019 !important;
+  color: #f0ede8 !important;
+}
+
+.sidebar-pane * {
+  color: #f0ede8 !important;
+}
+
+.sidebar-pane a {
+  color: #5ee7d9 !important;
+}
+
+.sidebar-pane a:hover {
+  color: #f0ede8 !important;
+}
+
+
+
+/* Mobile "On this page" button - the summary/toggle */
+#starlight__on-this-page--mobile {
+  background-color: rgba(45, 212, 191, 0.15) !important;
+  color: #5ee7d9 !important;
+  border: 1px solid rgba(45, 212, 191, 0.4) !important;
+  cursor: pointer !important;
+}
+
+#starlight__on-this-page--mobile:hover {
+  background-color: rgba(45, 212, 191, 0.25) !important;
+  border-color: rgba(45, 212, 191, 0.6) !important;
+}
+
+#starlight__on-this-page--mobile,
+#starlight__on-this-page--mobile *,
+#starlight__on-this-page--mobile .toggle {
+  color: #5ee7d9 !important;
+  fill: #5ee7d9 !important;
+  stroke: #5ee7d9 !important;
+  background-color: transparent !important;
+}
+
+/* Mobile "On this page" dropdown container - the details element */
+#starlight__mobile-toc {
+  background-color: #0a1019 !important;
+}
+
+#starlight__mobile-toc[open] {
+  background-color: #0a1019 !important;
+}
+
+/* All content inside the mobile toc details element */
+#starlight__mobile-toc > * {
+  background-color: #0a1019 !important;
+  color: #f0ede8 !important;
+}
+
+#starlight__mobile-toc ul,
+#starlight__mobile-toc ol,
+#starlight__mobile-toc li {
+  background-color: #0a1019 !important;
+  color: #f0ede8 !important;
+}
+
+#starlight__mobile-toc a {
+  color: #5ee7d9 !important;
+}
+
+#starlight__mobile-toc a:hover {
+  color: #f0ede8 !important;
+}
+
+/* Make sure summary children don't have white background */
+summary {
+  background-color: transparent !important;
+}
+
+/* Force dark background on all toc/toc-list content */
+:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) {
+  background-color: #0a1019 !important;
+  color: #f0ede8 !important;
+}
+
+:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) a,
+:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) li,
+:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) ul,
+:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) ol {
+  background-color: #0a1019 !important;
+  color: #f0ede8 !important;
+}
+
+:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) a {
+  color: #5ee7d9 !important;
+}
+
+:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) a:hover {
+  color: #f0ede8 !important;
+}
+button[aria-label="Menu"] {
+  color: #f0ede8 !important;
+  fill: #f0ede8 !important;
+  stroke: #f0ede8 !important;
+  background: transparent !important;
+  border: 2px solid rgba(45, 212, 191, 0.5) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.5rem !important;
+}
+
+button[aria-label="Menu"]:hover {
+  color: #5ee7d9 !important;
+  fill: #5ee7d9 !important;
+  stroke: #5ee7d9 !important;
+  border-color: rgba(45, 212, 191, 0.8) !important;
+}
+
+button[aria-label="Menu"] svg {
+  color: #f0ede8 !important;
+  fill: #f0ede8 !important;
+  stroke: #f0ede8 !important;
+}
+
+button[aria-label="Menu"]:hover svg {
+  color: #5ee7d9 !important;
+  fill: #5ee7d9 !important;
+  stroke: #5ee7d9 !important;
+}
+
+button[aria-label="Menu"] svg * {
+  color: #f0ede8 !important;
+  fill: #f0ede8 !important;
+  stroke: #f0ede8 !important;
+}
+
+button[aria-label="Menu"]:hover svg * {
+  color: #5ee7d9 !important;
+  fill: #5ee7d9 !important;
+  stroke: #5ee7d9 !important;
+}
+
+/* Sidebar labels */
+.group-label {
+  color: #a2acbf !important;
+}
+
+/* Desktop "On this page" sidebar */
+.right-sidebar-container,
+.right-sidebar {
+  background-color: #0a1019 !important;
+  color: #f0ede8 !important;
+}
+
+.right-sidebar a {
+  color: #5ee7d9 !important;
+}
+
+.right-sidebar a:hover {
+  color: #f0ede8 !important;
+}
