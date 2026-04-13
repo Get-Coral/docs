@@ -1,6 +1,6 @@
 ---
 title: Versions
-description: Current versions across Coral modules and libraries
+description: Current versions across Coral modules, libraries, and tooling
 ---
 
 ## Version Matrix
@@ -15,8 +15,10 @@ This page is generated manually from each module's package metadata and changelo
 | KAPOW | 1.0.0 | CHANGELOG.md |
 | Encore | 0.1.0 | package.json |
 | Marquee | 0.1.0 | package.json |
-| @get-coral/jellyfin | 1.2.0 | package.json |
-| create-coral | 0.1.0 | package.json |
+| @get-coral/jellyfin | 1.4.0 | package.json |
+| create-coral | 1.0.3 | package.json |
+| @get-coral/tsconfig | 0.2.0 | package.json |
+| @get-coral/biome-config | 0.2.0 | package.json |
 | Coral Docs | 0.0.1 | docs/package.json |
 
 ## Notes
@@ -32,4 +34,4 @@ When releasing a new version:
 2. Update this page in docs.
 3. Optionally update the module page version section.
 
-Last verified: 2026-04-12
+Last verified: 2026-04-13

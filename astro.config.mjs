@@ -33,7 +33,7 @@ export default defineConfig({
             {
               label: 'create-coral CLI',
               slug: 'getting-started/create-coral',
-              badge: { text: '0.1.0', variant: 'success' },
+              badge: { text: '1.0.3', variant: 'success' },
             },
           ],
         },
@@ -78,7 +78,12 @@ export default defineConfig({
             {
               label: 'Jellyfin API Client',
               slug: 'libraries/jellyfin',
-              badge: { text: '1.2.0', variant: 'success' },
+              badge: { text: '1.4.0', variant: 'success' },
+            },
+            {
+              label: 'NPM Packages',
+              slug: 'libraries/npm-packages',
+              badge: { text: 'new', variant: 'note' },
             },
           ],
         },
