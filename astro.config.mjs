@@ -24,6 +24,11 @@ export default defineConfig({
           label: 'GitHub',
           href: 'https://github.com/Get-Coral',
         },
+        {
+          icon: 'discord',
+          label: 'Discord',
+          href: 'https://discord.gg/M3wzFpGbzp',
+        },
       ],
       sidebar: [
         {
