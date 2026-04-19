@@ -1,5 +1,8 @@
 # Coral Documentation
 
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-ElianCodes-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/ElianCodes)
+[![Discord](https://img.shields.io/discord/1495441903297237043?label=Discord&logo=discord&logoColor=white&color=5865F2)](https://discord.gg/M3wzFpGbzp)
+
 Documentation site for the Coral ecosystem of Jellyfin modules.
 
 **Live at:** [docs.getcoral.dev](https://docs.getcoral.dev)
