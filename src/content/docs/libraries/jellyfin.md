@@ -5,7 +5,7 @@ description: A fully typed TypeScript client for the Jellyfin API
 
 ## @get-coral/jellyfin
 
-A modern, fetch-based Jellyfin API client with full TypeScript types. No dependencies. Works in Node.js, browsers, and edge runtimes (Cloudflare Workers, Vercel Edge, etc).
+A modern, fetch-based Jellyfin API client with full TypeScript types and zero dependencies. Works in Node.js, browsers, and edge runtimes. It powers Aurora and the other Coral modules.
 
 ## Installation
 
@@ -23,213 +23,123 @@ import { createClient, getLibraryItems, fromJellyfin } from '@get-coral/jellyfin
 const client = createClient({
   url: 'http://192.168.1.10:8096',
   apiKey: 'your-api-key',
-  userId: 'your-user-id'
+  userId: 'your-user-id',
 })
 
-// Fetch library items
-const items = await getLibraryItems(client, {
-  libraryId: 'library-id',
-  limit: 50
+const { Items } = await getLibraryItems(client, 'Movie', {
+  limit: 24,
+  sortBy: 'SortName',
+  watchStatus: 'unwatched',
 })
 
-// Transform Jellyfin data to typed objects
-const movies = items.map(fromJellyfin.movie)
+const movies = Items.map(item => fromJellyfin(client, item))
 ```
 
-## Features
-
-### Type-Safe API
-- Full TypeScript support
-- Strongly typed responses
-- IntelliSense support
-- No `any` types
-
-### Zero Dependencies
-- Tiny bundle size
-- Uses native `fetch` API
-- No external dependencies
-- Fast installation
-
-### Works Everywhere
-- Node.js
-- Browser
-- Cloudflare Workers
-- Vercel Edge Functions
-- Deno
-- And other edge runtimes
-
-### Comprehensive Coverage
-- Browse libraries
-- Get items and collections
-- Fetch user sessions
-- Update playback state
-- Search functionality
-- And much more
-
-## Core API
-
-### Client Creation
+## Client Configuration
 
 ```ts
-import { createClient } from '@get-coral/jellyfin'
-
 const client = createClient({
-  url: 'http://your-jellyfin-server:8096',
-  apiKey: 'your-api-key',
-  userId: 'your-user-id'
+  url: string        // Jellyfin server URL (trailing slash stripped automatically)
+  apiKey: string     // Jellyfin API key
+  userId: string     // User ID (UUID)
+
+  // Optional — for playback progress sync
+  username?: string
+  password?: string
+
+  // Optional — a ready Jellyfin access token (e.g. from authenticateUserByName).
+  // When set, playback auth uses it directly instead of re-authenticating.
+  accessToken?: string
+
+  // Optional — how this client identifies itself in Jellyfin's active sessions
+  clientName?: string  // default: 'Coral'
+  deviceName?: string  // default: 'Coral Web'
+  deviceId?: string    // default: 'coral-web'
+  version?: string     // default: '1.0.0'
 })
 ```
 
-### Common Operations
+## API Overview
+
+The client is passed as the first argument to standalone functions, grouped roughly by area:
+
+- **Items**: `getLibraryItems`, `getItem`, `getLatestMedia`, `getContinueWatching`, `getFavoriteItems`, `getWatchHistory`, `getMostPlayed`, `getSimilarItems`, `getFeaturedItem`, `searchItems`, `setFavorite`, `setPlayed`, `deleteItem`, `updateItem`, remote image helpers
+- **Shows**: `getEpisodesForSeries`, `getNextUpForSeries`
+- **Collections**: `getCollections`, `getCollectionItems`, `createCollection`, `addItemsToCollection`, `removeItemsFromCollection`, `searchCollectionItems`
+- **Playback**: `createPlaybackSession`, `syncPlaybackState`
+- **Authentication & sessions**: `authenticateUserByName`, `logoutUserSession`
+- **URL builders**: `imageUrl`, `personImageUrl`, `streamUrl`, `transcodeUrl`, `subtitleUrl`
+- **Mapper**: `fromJellyfin`, `fromJellyfinDetailed` — normalise raw `JellyfinItem`s into a UI-friendly `MediaItem` shape
+- **Admin**: `getSystemInfo`, `getItemCounts`, `getActiveSessions`, `getUsers`, `getUserById`, `createUser`, `deleteUser`, `updateUserPolicy`, `getVirtualFolders`, `scanAllLibraries`, `scanLibrary`
+
+See the [repository README](https://github.com/Get-Coral/Jellyfin#api-reference) for the full reference with options and return types.
+
+## Authentication & Sessions
+
+Build sign-in flows on top of Jellyfin's own accounts:
 
 ```ts
-import { 
-  getLibraries,
-  getLibraryItems,
-  getItem,
-  getNextUp,
-  getContinueWatching,
-  search,
-  fromJellyfin
-} from '@get-coral/jellyfin'
+import { authenticateUserByName, logoutUserSession, createClient } from '@get-coral/jellyfin'
 
-// Get all libraries
-const libraries = await getLibraries(client)
+// Sign a user in with their Jellyfin username/password.
+// Returns their identity and a real Jellyfin access token.
+const { user, accessToken, sessionId } = await authenticateUserByName(client, 'alice', 'secret')
 
-// Get items from a library
-const items = await getLibraryItems(client, {
-  parentId: 'library-id',
-  limit: 50
+// Act as that user: playback and progress sync run under their token
+const userClient = createClient({
+  url,
+  apiKey,
+  userId: user.Id,
+  accessToken,
+  deviceId: 'my-app-session-1234',
 })
 
-// Get a specific item
-const item = await getItem(client, 'item-id')
-
-// Get continue watching
-const continuing = await getContinueWatching(client)
-
-// Get next up (for series)
-const nextUp = await getNextUp(client, {
-  parentId: 'series-id'
-})
-
-// Search
-const results = await search(client, {
-  searchTerm: 'test',
-  limit: 20
-})
-
-// Transform to typed objects
-const movie = fromJellyfin.movie(item)
-const series = fromJellyfin.series(item)
+// End the session again (revokes the token)
+await logoutUserSession(client, accessToken)
 ```
 
-### Update Operations
+Give every session a **unique `deviceId`** — Jellyfin revokes the previous token when the same user re-authenticates with the same device id, so a shared id makes concurrent sign-ins invalidate each other. `authenticateUserByName` throws a `JellyfinError` with status 401 for invalid credentials or disabled users.
+
+## Playback Sync
 
 ```ts
-import { updatePlaybackState, markFavorite } from '@get-coral/jellyfin'
+import { createPlaybackSession, syncPlaybackState } from '@get-coral/jellyfin'
 
-// Update user playback progress
-await updatePlaybackState(client, {
-  itemId: 'item-id',
-  positionTicks: 12345,
-  isPaused: false
-})
+const session = await createPlaybackSession(client, itemId)
 
-// Mark as favorite
-await markFavorite(client, {
-  itemId: 'item-id',
-  isFavorite: true
+await syncPlaybackState(client, {
+  itemId,
+  playSessionId: session.playSessionId,
+  positionTicks: 12_345,
+  isPaused: false,
 })
 ```
 
-## Data Transformation
-
-Transform raw Jellyfin API responses to typed objects:
-
-```ts
-import { fromJellyfin } from '@get-coral/jellyfin'
-
-const jellyfinItem = await getItem(client, 'item-id')
-
-// Convert to strongly-typed objects
-const movie = fromJellyfin.movie(jellyfinItem)
-const series = fromJellyfin.series(jellyfinItem)
-const episode = fromJellyfin.episode(jellyfinItem)
-const person = fromJellyfin.person(jellyfinItem)
-```
-
-Each transformer:
-- Validates the data structure
-- Extracts relevant fields
-- Provides TypeScript types
-- Handles missing data gracefully
-
-## Advanced Usage
-
-### Authentication in Node.js
-
-```ts
-import { authenticate } from '@get-coral/jellyfin'
-
-const token = await authenticate(client, {
-  username: 'your-username',
-  password: 'your-password'
-})
-
-// Use token for authenticated requests
-```
-
-### Working with Edge Runtimes
-
-```ts
-import { createClient } from '@get-coral/jellyfin'
-
-// Works with Vercel Edge Functions
-export default async (req: Request) => {
-  const client = createClient({
-    url: process.env.JELLYFIN_URL,
-    apiKey: process.env.JELLYFIN_API_KEY,
-    userId: process.env.JELLYFIN_USER_ID
-  })
-  
-  const items = await getLibraryItems(client, {
-    limit: 10
-  })
-  
-  return Response.json(items)
-}
-```
+Playback endpoints authenticate as a real Jellyfin session, using either the configured `username`/`password` or a ready `accessToken`.
 
 ## Error Handling
 
+All functions throw a `JellyfinError` on non-OK responses:
+
 ```ts
+import { JellyfinError } from '@get-coral/jellyfin'
+
 try {
-  const item = await getItem(client, 'invalid-id')
-} catch (error) {
-  if (error instanceof JellyfinError) {
-    console.error('Jellyfin API error:', error.message)
+  const item = await getItem(client, 'bad-id')
+} catch (err) {
+  if (err instanceof JellyfinError) {
+    console.error(err.message) // 'Jellyfin API error on ...: 404 Not Found'
+    console.error(err.status)  // 404
   }
 }
 ```
-
-## Performance Tips
-
-- Use `limit` and `startIndex` for pagination
-- Cache responses appropriate to your use case
-- Use filter parameters to reduce data transfer
-- Consider using `includeFields` to limit response size
 
 ## Contributing
 
 Community contributions are welcome! See the [Contributing](/contributing/getting-started/) guide.
 
-## License
-
-MIT
-
 ## Links
 
-- [GitHub Repository](https://github.com/Get-Coral/jellyfin)
+- [GitHub Repository](https://github.com/Get-Coral/Jellyfin)
 - [npm Package](https://www.npmjs.com/package/@get-coral/jellyfin)
 - [Jellyfin Docs](https://jellyfin.org/)

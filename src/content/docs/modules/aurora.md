@@ -12,10 +12,14 @@ Aurora is a premium Jellyfin frontend built with TanStack Start and React. It ke
 - **Jellyfin-powered home screen** with featured, continue watching, favorites, and recommendation rails
 - **Embedded playback** with progress sync back to Jellyfin
 - **Rich title detail views** with cast, related titles, and series episode context
-- **Movie and series library pages** with genre browsing, sorting, and pagination
+- **Movie and series library pages** with genre browsing, filtering, sorting, and pagination
 - **My List / Favorites workflow** backed by Jellyfin favorites
-- **Translation-ready UI** with locale files contributors can extend
+- **Multi-user profiles** with a Netflix-style profile picker for shared households
+- **Optional required sign-in** with per-user Jellyfin sessions, so playback and watch progress are attributed to the right account
+- **Admin dashboard** for managing users, parental controls, libraries, and active sessions
+- **TV mode** with larger text and remote-friendly navigation, plus light/dark themes and translations (English, Dutch)
 - **Local-first onboarding** backed by SQLite so self-hosting doesn't require an external database
+- **PWA and Capacitor wrappers** for installable web, Android, and iOS builds
 
 ## Stack
 
@@ -23,101 +27,69 @@ Aurora is a premium Jellyfin frontend built with TanStack Start and React. It ke
 - React 19
 - [TanStack Router](https://tanstack.com/router) + [TanStack Query](https://tanstack.com/query)
 - Tailwind CSS v4
-- Jellyfin API
+- [@get-coral/jellyfin](/libraries/jellyfin/) for all Jellyfin API access
 
-## Getting Started
+## Running with Docker
+
+The recommended way to self-host Aurora:
+
+```bash
+docker run -d -p 3000:3000 \
+  -v aurora-data:/data \
+  ghcr.io/eliancodes/aurora-ui:latest
+```
+
+Open `http://localhost:3000` and complete the onboarding flow once — Aurora persists the Jellyfin connection in `/data/aurora.sqlite`. Alternatively, skip onboarding by passing the Jellyfin environment variables below.
+
+## Local Development
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm (or npm/yarn)
-- Running Jellyfin server
+- Node.js 22+
+- pnpm
+- A running Jellyfin server
 
-### Installation
+### Setup
 
-1. Clone the repository:
 ```bash
 git clone https://github.com/Get-Coral/aurora.git
 cd aurora
-```
-
-2. Install dependencies:
-```bash
 pnpm install
-```
-
-3. Configure environment variables:
-```bash
-cp .env.example .env
-```
-
-4. Set your Jellyfin URL and credentials:
-```
-JELLYFIN_URL=http://your-server:8096
-JELLYFIN_API_KEY=your-api-key
-JELLYFIN_USER_ID=your-user-id
-```
-
-5. Start development server:
-```bash
+cp .env.example .env   # optional: skips the in-app setup flow
 pnpm dev
 ```
 
-Aurora will be available at `http://localhost:3000`
+Aurora will be available at `http://localhost:3000`.
 
-## Features in Detail
+## Configuration
 
-### Home Screen
-- Personalized welcome with user avatars
-- Featured content rail
-- Continue watching recommendations
-- Favorites collection
-- New releases
+All configuration can be done through the in-app setup and settings screens; environment variables are optional overrides.
 
-### Browse & Search
-- Browse by genre
-- Full-text search
-- Library browsing
-- Advanced filtering and sorting
+| Variable | Purpose |
+| --- | --- |
+| `JELLYFIN_URL` | Jellyfin server URL |
+| `JELLYFIN_API_KEY` | Jellyfin API key |
+| `JELLYFIN_USER_ID` | UUID of the primary Jellyfin user |
+| `JELLYFIN_USERNAME` / `JELLYFIN_PASSWORD` | Used for the playback session when sign-in is not required |
+| `AURORA_REQUIRE_LOGIN` | `true` forces required sign-in and locks the toggle |
+| `AURORA_MULTI_USER` | `true` forces multi-user profiles and locks the toggle |
+| `AURORA_DATA_DIR` | Where the local SQLite database lives (default `./data`) |
 
-### Playback
-- Embedded video player
-- Progress tracking
-- Resume from reading position
-- Cast information
-- Related content suggestions
+## User Profiles & Sign-In
 
-### User Preferences
-- Favorites management
-- Playback preferences
-- Theme customization
-- Language selection
+Aurora supports shared households out of the box:
 
-## Development
-
-Aurora uses TanStack Start for server-side rendering with:
-- File-based routing in `src/routes/`
-- API endpoints for backend integration
-- React Server Components for data fetching
-- Client-side hydration for interactivity
-
-### Key directories:
-- `src/routes/` - Page components and API endpoints
-- `src/components/` - Reusable UI components
-- `src/lib/` - Utilities and helpers
-- `src/integrations/` - Third-party service integration
+- **Profiles**: enable multi-user mode in Settings → User profiles (or `AURORA_MULTI_USER=true`). Everyone picks their own Jellyfin user on a profile screen when opening Aurora.
+- **Required sign-in**: if your instance is reachable from the internet, enable it in Settings → Security (or `AURORA_REQUIRE_LOGIN=true`). Everyone must then sign in with their Jellyfin username and password before Aurora serves anything — sessions are validated against Jellyfin, stored server-side, and each user's playback runs under their own Jellyfin session.
+- **Admin dashboard**: Jellyfin administrators can create, disable, and delete users, edit parental controls, trigger library scans, and watch active sessions from `/admin`.
 
 ## Deployment
 
-Aurora can be deployed to:
-- Vercel
-- Docker (Dockerfile included)
-- Self-hosted servers
+Aurora ships as a Node server with a production Dockerfile. The GitHub Actions workflows build and publish the container to GitHub Container Registry on every release.
 
-For production builds:
 ```bash
 pnpm build
-pnpm preview
+pnpm start
 ```
 
 ## Contributing
