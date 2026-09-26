@@ -11,7 +11,8 @@ Marquee is a Coral ecosystem module built on TanStack Start, Tailwind v4, and th
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 24 LTS (Node 22.5+ is the hard floor — this module uses the
+  built-in `node:sqlite` module, which does not exist on Node 18 or 20)
 - pnpm (or npm/yarn)
 
 ### Installation

@@ -21,7 +21,8 @@ Tide is Coral's torrent download manager. It gives you a cleaner, self-hosted in
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 24 LTS (Node 22.5+ is the hard floor — this module uses the
+  built-in `node:sqlite` module, which does not exist on Node 18 or 20)
 - pnpm
 - A system that can run WebTorrent in Node
 
@@ -136,7 +137,7 @@ docker run -p 3000:3000 \
   -e TIDE_DOWNLOADS_DIR=/downloads \
   -e TIDE_AUTH_USERNAME=admin \
   -e TIDE_AUTH_PASSWORD=change-me \
-  ghcr.io/get-coral/tide:latest
+  getcoral/tide:latest
 ```
 
 ## Repository

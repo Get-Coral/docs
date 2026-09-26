@@ -39,6 +39,10 @@ export default defineConfig({
               label: 'create-coral CLI',
               slug: 'getting-started/create-coral',
             },
+            {
+              label: 'Docker Compose',
+              slug: 'getting-started/docker-compose',
+            },
           ],
         },
         {

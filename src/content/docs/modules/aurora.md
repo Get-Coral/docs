@@ -36,7 +36,7 @@ The recommended way to self-host Aurora:
 ```bash
 docker run -d -p 3000:3000 \
   -v aurora-data:/data \
-  ghcr.io/eliancodes/aurora-ui:latest
+  getcoral/aurora:latest
 ```
 
 Open `http://localhost:3000` and complete the onboarding flow once — Aurora persists the Jellyfin connection in `/data/aurora.sqlite`. Alternatively, skip onboarding by passing the Jellyfin environment variables below.
@@ -45,7 +45,8 @@ Open `http://localhost:3000` and complete the onboarding flow once — Aurora pe
 
 ### Prerequisites
 
-- Node.js 22+
+- Node.js 24 LTS (Node 22.5+ is the hard floor — this module uses the
+  built-in `node:sqlite` module, which does not exist on Node 18 or 20)
 - pnpm
 - A running Jellyfin server
 
