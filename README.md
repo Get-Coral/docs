@@ -45,7 +45,7 @@ pnpm install
 pnpm dev
 ```
 
-Accessible at `http://localhost:3000`
+Accessible at `http://localhost:4321`
 
 ### Build for production
 
@@ -101,10 +101,13 @@ vercel
 
 Documentation is organized into sections:
 
-- **Getting Started** - Intro to Coral ecosystem
-- **Modules** - Individual module guides (Aurora, Fathom, Librarian, KAPOW)
-- **Libraries** - SDK and library documentation (Jellyfin API Client)
+- **Getting Started** - Intro, the Docker Compose stack, the CLI, module contracts
+- **Modules** - Aurora, Tide, Librarian, Fathom, Marquee, KAPOW!, Encore
+- **Libraries** - Jellyfin API client, Coral UI, published npm packages
 - **Contributing** - How to contribute and build new modules
+
+Before editing content, read [AGENTS.md](./AGENTS.md) — particularly the rule
+about verifying claims against the source repositories.
 
 ## Adding Content
 
@@ -145,9 +148,17 @@ sidebar: [
 ![Alt text](../../assets/image.png)
 ```
 
+## Checks
+
+```bash
+pnpm build
+pnpm check:links   # internal links resolve (run after a build)
+pnpm check:env     # documented env vars match each module repo's .env.example
+```
+
 ## Styling
 
-Uses Tailwind CSS v4 and Starlight's component library:
+Uses Starlight's component library, themed through `src/styles.css`:
 
 ```markdown
 import { Card, CardGrid, Aside } from '@astrojs/starlight/components';

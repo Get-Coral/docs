@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap');
+/* Fonts are loaded from src/components/Head.astro with a preconnect, rather
+   than a render-blocking @import here. */
 
 :root {
   --sl-font-sans: 'DM Sans', sans-serif;
@@ -82,8 +83,7 @@ body {
 }
 
 /* Header + nav contrast */
-header.header,
-.header.astro-wh26sp3i {
+header.header {
   background: linear-gradient(180deg, var(--sl-color-bg-nav), rgba(14, 20, 39, 0.8)) !important;
   border-bottom: 0 !important;
   box-shadow: none !important;
@@ -95,8 +95,7 @@ starlight-theme-select {
   display: none !important;
 }
 
-header.header::after,
-.header.astro-wh26sp3i::after {
+header.header::after {
   display: none !important;
 }
 
@@ -227,15 +226,6 @@ pre code {
   color: rgba(214, 222, 235, 0.95) !important;
 }
 
-.expressive-code .copy button {
-  display: none !important;
-}
-
-.expressive-code .copy,
-.expressive-code .copy [aria-live] {
-  display: none !important;
-}
-
 /* Card styling: only actual cards, not card-grid wrappers */
 article.card {
   background-color: rgba(45, 212, 191, 0.06);
@@ -352,37 +342,6 @@ table tbody tr:hover {
 
 .sidebar a[aria-current='page']:hover {
   color: #041a1f !important;
-}
-
-/* Theme switcher */
-starlight-theme-select label {
-  display: inline-flex !important;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.55rem !important;
-  background: rgba(45, 212, 191, 0.08) !important;
-  border: 1px solid rgba(45, 212, 191, 0.3) !important;
-  border-radius: 0.5rem !important;
-  color: #d8e7f2 !important;
-}
-
-starlight-theme-select select {
-  appearance: none;
-  background: transparent !important;
-  border: 0 !important;
-  padding: 0.12rem 0.2rem !important;
-  color: #d8e7f2 !important;
-  font-weight: 500;
-}
-
-starlight-theme-select option {
-  color: #d8e7f2;
-  background: #121b2e;
-}
-
-starlight-theme-select .label-icon,
-starlight-theme-select .caret {
-  color: #5ee7d9 !important;
 }
 
 strong {
