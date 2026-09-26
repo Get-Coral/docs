@@ -43,6 +43,10 @@ export default defineConfig({
               label: 'Docker Compose',
               slug: 'getting-started/docker-compose',
             },
+            {
+              label: 'Module contracts',
+              slug: 'getting-started/module-contracts',
+            },
           ],
         },
         {
