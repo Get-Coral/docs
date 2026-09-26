@@ -26,6 +26,24 @@ Instead of a monolithic media center, Coral provides specialized, best-in-class 
 - **Modern stack** - TanStack Start, React, Tailwind CSS
 - **Independent** - Each module can be deployed separately
 
+## How modules relate to each other
+
+Jellyfin is the source of truth and modules never share a database. What
+Jellyfin knows, you read from Jellyfin.
+
+For the few things Jellyfin has no API for — organising a directory, rather
+than scanning one — a module can expose a small versioned contract another
+module opts into. Three rules keep that narrow:
+
+1. **No link is required.** Every module runs alone and is useful alone.
+2. **No link is implicit.** An operator pastes a URL and a token. Nothing is
+   discovered or scanned; two modules on the same network that have not been
+   introduced stay strangers.
+3. **Nothing Jellyfin can already answer gets a contract.**
+
+See [Module contracts](/getting-started/module-contracts/) for the manifest
+format, tokens, and the capability list.
+
 ## Getting Started
 
 If you want to build a new Coral module, start with the official CLI:
