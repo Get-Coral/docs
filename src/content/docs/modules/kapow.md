@@ -54,7 +54,7 @@ Perfect for parties, events, and group entertainment nights.
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 24 LTS
 - pnpm (or npm/yarn)
 - Supabase account
 - YouTube Data API key

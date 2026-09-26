@@ -11,7 +11,7 @@ Encore is a Coral ecosystem module built on TanStack Start, Tailwind v4, and the
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 24 LTS
 - pnpm (or npm/yarn)
 
 ### Installation

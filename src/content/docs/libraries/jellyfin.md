@@ -134,6 +134,39 @@ try {
 }
 ```
 
+## Jellyfin server compatibility
+
+| Client | Jellyfin 10.x | Jellyfin 12.x |
+| --- | --- | --- |
+| `<= 1.9.0` | works | **broken** — every JSON call returns 401 |
+| `> 1.9.0` | works | works |
+
+Jellyfin 12 removed three auth mechanisms the client relied on. Verified against `jellyfin/jellyfin:12.1.0`:
+
+| Request | Jellyfin 12 |
+| --- | --- |
+| `GET /Items?…&api_key=<key>` | 401 |
+| `GET /Items` with `X-Emby-Token: <key>` | 401 |
+| `POST /Users/AuthenticateByName` with `X-Emby-Authorization` | 400 |
+| `GET /Items` with `Authorization: MediaBrowser Token="<key>"` | 200 |
+
+Only the standard `Authorization` header is accepted, and it works on 10.x too — so newer client versions support both server generations.
+
+### Symptoms on an affected version
+
+Every JSON call fails, which in a module usually surfaces as a 500 on the home page with all data queries rejecting:
+
+```
+JellyfinError: Jellyfin API error on /Users/<id>/Items/Latest: 401 Unauthorized
+JellyfinError: Jellyfin API error on /Users/<id>/Items/Resume: 401 Unauthorized
+```
+
+If you see this against a Jellyfin 12 server, upgrade `@get-coral/jellyfin`.
+
+### Image and video URLs are unaffected
+
+`imageUrl()`, `streamUrl()`, `transcodeUrl()` and `subtitleUrl()` still append `api_key`, deliberately — those strings are consumed by `<img src>` and video element sources, where a header cannot be attached. Jellyfin 12 serves image and video endpoints without authentication, and Jellyfin 10 still requires the parameter, so the same URL works on both.
+
 ## Contributing
 
 Community contributions are welcome! See the [Contributing](/contributing/getting-started/) guide.

@@ -21,7 +21,8 @@ Tide is Coral's torrent download manager. It gives you a cleaner, self-hosted in
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 24 LTS (Node 22.5+ is the hard floor — this module uses the
+  built-in `node:sqlite` module, which does not exist on Node 18 or 20)
 - pnpm
 - A system that can run WebTorrent in Node
 
