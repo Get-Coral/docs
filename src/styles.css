@@ -390,23 +390,27 @@ strong {
   font-weight: 600;
 }
 
-/* Mobile sidebar when expanded */
+/* The expanded mobile sidebar sits over page content, so it needs an opaque
+   fill; --sl-color-bg-sidebar is deliberately translucent for the desktop rail.
+   Nothing here sets a colour: these panels used to force one on every
+   descendant with `*`, which painted over the current-page pill's dark text
+   and left it at 1.6:1 on the teal fill. Starlight's own colours are correct
+   now that the grey scale is the right way round. */
 #starlight__sidebar,
 .sidebar-pane {
   background-color: #0a1019 !important;
-  color: #f0ede8 !important;
 }
 
-.sidebar-pane * {
-  color: #f0ede8 !important;
+/* Navigation, not prose: the rail stays neutral so the current-page pill is
+   the only accent in it. Set on the anchor, never on its descendants — the
+   <span> inside is what the old `*` rule was painting over. */
+.sidebar-content a {
+  color: var(--sl-color-gray-2);
+  font-weight: 400;
 }
 
-.sidebar-pane a {
-  color: #5ee7d9 !important;
-}
-
-.sidebar-pane a:hover {
-  color: #f0ede8 !important;
+.sidebar-content a:hover {
+  color: var(--sl-color-white);
 }
 
 
@@ -425,11 +429,10 @@ strong {
 }
 
 #starlight__on-this-page--mobile,
-#starlight__on-this-page--mobile *,
 #starlight__on-this-page--mobile .toggle {
   color: #5ee7d9 !important;
-  fill: #5ee7d9 !important;
-  stroke: #5ee7d9 !important;
+  fill: currentColor;
+  stroke: currentColor;
   background-color: transparent !important;
 }
 
@@ -440,19 +443,6 @@ strong {
 
 #starlight__mobile-toc[open] {
   background-color: #0a1019 !important;
-}
-
-/* All content inside the mobile toc details element */
-#starlight__mobile-toc > * {
-  background-color: #0a1019 !important;
-  color: #f0ede8 !important;
-}
-
-#starlight__mobile-toc ul,
-#starlight__mobile-toc ol,
-#starlight__mobile-toc li {
-  background-color: #0a1019 !important;
-  color: #f0ede8 !important;
 }
 
 #starlight__mobile-toc a {
@@ -468,27 +458,6 @@ summary {
   background-color: transparent !important;
 }
 
-/* Force dark background on all toc/toc-list content */
-:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) {
-  background-color: #0a1019 !important;
-  color: #f0ede8 !important;
-}
-
-:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) a,
-:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) li,
-:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) ul,
-:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) ol {
-  background-color: #0a1019 !important;
-  color: #f0ede8 !important;
-}
-
-:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) a {
-  color: #5ee7d9 !important;
-}
-
-:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) a:hover {
-  color: #f0ede8 !important;
-}
 button[aria-label="Menu"] {
   color: #f0ede8 !important;
   fill: #f0ede8 !important;
