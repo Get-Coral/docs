@@ -13,11 +13,11 @@ persistent storage.
 ## The shape of it
 
 ```
-Tide downloads  ->  downloads/incomplete   (in progress, hidden from Jellyfin)
-          done  ->  downloads/complete     (moved with a rename)
+Tide downloads  ->  library/downloads/incomplete   (in progress, unscanned)
+          done  ->  library/downloads/complete     (moved with a rename)
                       |
                       v
-Librarian imports it into media/movies or media/tv
+Librarian imports it into library/media/movies or library/media/tv
   (a hardlink: no extra disk, and the torrent keeps seeding)
                       |
                       v
@@ -38,10 +38,11 @@ coral/
 ├── compose.yaml
 ├── .env
 ├── jellyfin/{config,cache}/
-├── media/{movies,tv}/
-├── downloads/
-│   ├── complete/      <- Tide writes here; Librarian imports from here
-│   └── incomplete/
+├── library/                 <- ONE mount, shared by the three that touch files
+│   ├── media/{movies,tv}/
+│   └── downloads/
+│       ├── complete/        <- Tide writes here; Librarian imports from here
+│       └── incomplete/
 ├── aurora-data/
 ├── tide-data/
 └── librarian-data/
@@ -64,8 +65,9 @@ services:
     volumes:
       - ./jellyfin/config:/config
       - ./jellyfin/cache:/cache
-      - ./media:/media
-      - ./downloads/complete:/downloads:ro   # completed only — no partial files
+      # One mount. Add /library/media/movies and /library/media/tv as
+      # libraries; do not add /library/downloads.
+      - ./library:/library
     networks: [coral]
 
   aurora:
@@ -100,13 +102,13 @@ services:
       - "127.0.0.1:3001:3000"
     environment:
       TIDE_DATA_DIR: /data
-      TIDE_DOWNLOADS_DIR: /downloads/complete
+      TIDE_DOWNLOADS_DIR: /library/downloads/complete
       TIDE_MEMORY_LIMIT_MB: "4096"
       TIDE_MEMORY_PAUSE_MB: "3584"
       TIDE_MEMORY_RESUME_MB: "3072"
     volumes:
       - ./tide-data:/data
-      - ./downloads:/downloads   # single mount: see note below
+      - ./library:/library   # single mount: see note below
     mem_limit: 4g
     networks: [coral]
 
@@ -123,14 +125,13 @@ services:
       JELLYFIN_API_KEY: ${JELLYFIN_API_KEY}
       JELLYFIN_USER_ID: ${JELLYFIN_USER_ID}
       # Seeds the roots. They arrive switched off — turn them on in the UI.
-      LIBRARIAN_DOWNLOADS_DIR: /downloads/complete
-      LIBRARIAN_MEDIA_DIR: /media
+      LIBRARIAN_DOWNLOADS_DIR: /library/downloads/complete
+      LIBRARIAN_MEDIA_DIR: /library/media/movies
     volumes:
       - ./librarian-data:/data
-      # The same container paths Jellyfin and Tide use, read-write.
-      # See "Why the paths have to match" below.
-      - ./media:/media
-      - ./downloads:/downloads
+      # The same single mount, at the same path, as Jellyfin and Tide.
+      # See "One mount, not one per directory" below.
+      - ./library:/library
     networks: [coral]
 
 networks:
@@ -158,25 +159,46 @@ JELLYFIN_PASSWORD=
 
 ## Details that matter
 
-**Keep Tide's complete and incomplete directories on one mount.** Tide derives
-its in-progress directory as a sibling of `TIDE_DOWNLOADS_DIR`, so
-`/downloads/complete` implies `/downloads/incomplete`. Mounting `./downloads`
-once means a finished torrent is moved with a rename. Mount them separately and
-every completed download becomes a full file copy across devices instead.
+**Tide needs its complete and incomplete directories on one mount too**, for
+the same reason and with the same symptom. It derives the in-progress
+directory as a sibling of `TIDE_DOWNLOADS_DIR`, so
+`/library/downloads/complete` implies `/library/downloads/incomplete`. Under
+one `./library` mount a finished torrent is moved with a rename; split them
+and every completed download becomes a full copy.
 
-**Why the paths have to match.** Librarian mounts `./media` at `/media` and
-`./downloads` at `/downloads` — the same container paths Jellyfin and Tide
-use. When they match, every module means the same thing by a path and nothing
-has to be translated. Mount Librarian's copies somewhere else and you will be
-filling in a path-mapping table by hand for no reason. Librarian can do that,
-but the table is meant to stay empty.
+**One mount, not one per directory.** This is the detail that decides whether
+imports cost nothing or cost a full copy, and it is not the one you would
+guess.
 
-**Keep media and downloads on one filesystem.** Librarian imports by
-hardlinking: the file appears in your library at a cost of zero bytes and the
-torrent carries on seeding the same data. A hardlink cannot cross a
-filesystem, so if `./media` and `./downloads` live on different disks every
-import becomes a full copy instead — correct, but slower and twice the space.
-In the layout above they are siblings, which is the point of the layout.
+Librarian imports by hardlinking: the file appears in your library at zero
+bytes and the torrent carries on seeding the same data. A hardlink cannot
+cross a filesystem — but it also cannot cross a *mount point*, even when both
+sides are the same filesystem. Bind-mounting `./media` and `./downloads`
+separately is enough to break it:
+
+```
+/media     dev = 36
+/downloads dev = 36     <- same device
+link() -> EXDEV         <- refused anyway
+```
+
+That is why everything here mounts one `./library` tree instead, with media
+and downloads as directories inside it. Awkward-looking paths, working
+hardlinks.
+
+Two consequences worth knowing:
+
+- Nothing that inspects `statSync().dev` can predict this, which is why
+  Librarian decides by *attempting* a link rather than comparing device ids.
+- If it does fall back, nothing breaks. The import becomes a verified copy —
+  correct, just slower and twice the space. You will see "Copy" rather than
+  "Hardlink" in the import preview, which is the place to check.
+
+**The same path everywhere.** All three services mount that tree at
+`/library`, so every module means the same thing by a path and nothing has to
+be translated. Mount it somewhere different in each and you will be filling in
+Librarian's path-mapping table by hand for no reason. It can do that; the
+table is meant to stay empty.
 
 **`user:` has to match across the three containers that share files.** Tide
 writes a download, Librarian links it into the library, Jellyfin reads it. If
@@ -184,8 +206,10 @@ they run as different users, the second step fails on permissions. Set `PUID`
 and `PGID` in `.env` to your own `id -u` and `id -g`. Librarian never chowns
 anything — it is not going to start rewriting ownership on your library.
 
-**Jellyfin only sees the completed directory**, read-only. Partial files never
-reach the scanner and cannot be half-imported.
+**Do not add `/library/downloads` as a Jellyfin library.** It is staging, not
+a library. Point Jellyfin at `/library/media/movies` and `/library/media/tv`
+and let Librarian move finished downloads into them — that is the whole point
+of having it.
 
 **Both Aurora and Tide default to port 3000 inside their containers.** They are
 separate containers, so only the host-side mapping has to differ.
@@ -204,12 +228,13 @@ Jellyfin has to exist before Aurora can be pointed at it.
 
 1. `docker compose up -d jellyfin`
 2. Open `http://localhost:8096` and complete the setup wizard and add your
-   libraries — `/media/movies` and `/media/tv`
+   libraries — `/library/media/movies` and `/library/media/tv`
 
-   Do **not** add `/downloads` as a library if you are running Librarian.
-   That is what strands finished downloads in a "Downloads" library instead
-   of filing them where they belong; Librarian imports them into the real
-   ones. Without Librarian, add it and accept the stranding.
+   Do **not** add `/library/downloads` as a library if you are running
+   Librarian. That is what strands finished downloads in a "Downloads"
+   library instead of filing them where they belong; Librarian imports them
+   into the real ones. Without Librarian, add
+   `/library/downloads/complete` and accept the stranding.
 3. Create an API key under **Dashboard → API Keys**
 4. Put the key, your user's **UUID** (not the username), your username and
    password, and your `PUID`/`PGID` into `.env`
