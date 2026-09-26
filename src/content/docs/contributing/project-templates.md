@@ -1,6 +1,6 @@
 ---
 title: Project Templates
-description: Building new Coral modules with project templates
+description: What the Coral module template contains, how to rename it for your own module, and the conventions every module follows.
 ---
 
 ## Creating a New Coral Module
@@ -78,7 +78,9 @@ If you cloned manually, replace `coral-module` throughout:
 }
 
 # In .github/workflows/docker-publish.yml
-IMAGE_NAME: my-module   # bare name; the workflow builds getcoral/<IMAGE_NAME>
+IMAGE_NAME: my-module   # bare name. The workflow publishes two images:
+                        #   ghcr.io/get-coral/<IMAGE_NAME>
+                        #   <DOCKERHUB_USERNAME>/<IMAGE_NAME>
 
 # In README.md
 # My Module
@@ -92,17 +94,22 @@ pnpm install
 
 ### 4. Create Your App
 
-The template includes:
+The template is deliberately close to empty:
 
 ```
-src/routes/
-├── index.tsx          # Home page
-├── api/
-│   └── example.ts     # API endpoint
-└── components/        # Reusable components
+src/
+├── routes/
+│   ├── __root.tsx     # Root layout
+│   └── index.tsx      # Home page
+├── router.tsx         # Router setup
+├── routeTree.gen.ts   # Generated — do not edit
+├── styles.css
+├── env.d.ts
+└── example.test.tsx
 ```
 
-Add your pages and components following TanStack Start conventions.
+There is no `api/` or `components/` directory yet; create them as you need
+them, following TanStack Start's file-based routing conventions.
 
 ### 5. Configure Jellyfin Connection
 
@@ -128,11 +135,11 @@ Runs on `http://localhost:3000`
 ### Key Directories
 
 - `src/routes/` - Page components and API routes
-- `src/components/` - Reusable UI components
-- `src/lib/` - Utilities and helpers
-- `src/integrations/` - External service integration
 - `public/` - Static assets
 - `.github/workflows/` - CI/CD pipelines
+
+Existing modules also use `src/components/`, `src/lib/` and `src/server/`. Those
+are conventions worth following, not directories the template ships.
 
 ### Configuration Files
 
@@ -178,8 +185,9 @@ const client = createClient({
   userId: process.env.JELLYFIN_USER_ID
 })
 
-const items = await getLibraryItems(client, {
-  parentId: 'library-id'
+const items = await getLibraryItems(client, 'Movie', {
+  limit: 24,
+  sortBy: 'SortName'
 })
 ```
 
@@ -261,16 +269,16 @@ Reference existing modules:
 
 - Update dependencies regularly: `pnpm update`
 - Monitor security advisories
-- Update Tailwind CSS v4
-- Update TanStack packages
+- Keep `@get-coral/biome-config` and `@get-coral/tsconfig` current — they carry
+  the shared defaults
 
 ### Upgrading TanStack Start
 
 ```bash
-pnpm add -u @tanstack/start
-pnpm add -u @tanstack/router
+pnpm update @tanstack/react-start @tanstack/react-router
 ```
 
+The package is `@tanstack/react-start`; `@tanstack/start` was its old name.
 Check release notes for breaking changes.
 
 ## Getting Help
@@ -299,3 +307,10 @@ When ready to share:
 ---
 
 Happy building! 🚀
+
+## Related
+
+- [create-coral CLI](/getting-started/create-coral/) — the supported way to start from this template
+- [Encore](/modules/encore/) — a live, unmodified copy of the template
+- [Module contracts](/getting-started/module-contracts/) — if your module needs to talk to another
+- [Contributing](/contributing/getting-started/) — tooling and commit conventions

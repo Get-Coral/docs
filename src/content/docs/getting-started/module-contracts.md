@@ -81,7 +81,10 @@ Defined in spec 1:
 | `downloads.list` | Tide | A point-in-time snapshot of what is downloading |
 | `downloads.events` | Tide | The same snapshots as a stream |
 | `library.refresh` | Librarian | Ask Jellyfin to rescan |
-| `files.move` | Librarian | Place a file into a library |
+
+Librarian's manifest additionally carries a top-level `roots` array describing
+the filesystem roots it has enabled. It is not part of the shared shape — a
+caller should ignore fields it does not recognise.
 
 A module advertises a capability only when it actually works. Librarian does
 not offer `library.refresh` before it is connected to a Jellyfin. Advertising
@@ -90,9 +93,10 @@ caller can only find out by failing.
 
 ### Reserved
 
-Named here so nobody else takes them, not implemented:
+Named here so nobody else takes them. **None of these is implemented**, and a
+module will not advertise one until it is:
 
-`files.browse`, `library.import`, `downloads.webhook`.
+`files.move`, `files.browse`, `library.import`, `downloads.webhook`.
 
 ### Never
 
@@ -120,3 +124,9 @@ has better access to.
 **Honest gap:** if a torrent completes *and* is removed from Tide while the
 consumer is down, the consumer never sees it. The file is still in
 `downloads/complete`; import it by hand.
+
+## Related
+
+- [Tide](/modules/tide/) — exposes `downloads.list` and `downloads.events`
+- [Librarian](/modules/librarian/) — exposes `library.refresh`
+- [Running a stack with Docker Compose](/getting-started/docker-compose/) — the two of them wired together

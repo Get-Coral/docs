@@ -1,11 +1,11 @@
 ---
 title: Jellyfin API Client
-description: A fully typed TypeScript client for the Jellyfin API
+description: A fetch-based, fully typed Jellyfin API client with zero runtime dependencies. Works in Node, the browser and edge runtimes.
 ---
 
-## @get-coral/jellyfin
-
-A modern, fetch-based Jellyfin API client with full TypeScript types and zero dependencies. Works in Node.js, browsers, and edge runtimes. It powers Aurora and the other Coral modules.
+`@get-coral/jellyfin` is a fetch-based Jellyfin API client with full TypeScript
+types and **zero runtime dependencies**. It works in Node.js, browsers and edge
+runtimes, and it is what every Coral module uses to talk to Jellyfin.
 
 ## Installation
 
@@ -70,9 +70,16 @@ The client is passed as the first argument to standalone functions, grouped roug
 - **Authentication & sessions**: `authenticateUserByName`, `logoutUserSession`
 - **URL builders**: `imageUrl`, `personImageUrl`, `streamUrl`, `transcodeUrl`, `subtitleUrl`
 - **Mapper**: `fromJellyfin`, `fromJellyfinDetailed` — normalise raw `JellyfinItem`s into a UI-friendly `MediaItem` shape
-- **Admin**: `getSystemInfo`, `getItemCounts`, `getActiveSessions`, `getUsers`, `getUserById`, `createUser`, `deleteUser`, `updateUserPolicy`, `getVirtualFolders`, `scanAllLibraries`, `scanLibrary`
+- **Admin**: `getSystemInfo`, `getItemCounts`, `getActiveSessions`, `getUsers`, `getUserById`, `createUser`, `deleteUser`, `disableUser`, `enableUser`, `updateUserPolicy`, `patchUserPolicy`, `updateUserPassword`, `updateUserPrimaryImage`, `uploadUserPrimaryImage`, `deleteUserPrimaryImage`, `getVirtualFolders`, `scanAllLibraries`, `scanLibrary`
+- **Artwork**: `getRemoteImages`, `getCoverCandidates`, `getCoverCandidatesForItem`, `downloadRemoteImage`, `uploadItemImageFromUrl`, `applyRemoteImageWithFallback`
+- **Metadata quality**: `getMetadataGapKeys`, `getMetadataGapReasons`, `metadataGapReasonForKey` — find items missing artwork or metadata. This is what a hygiene tool is built on
+- **Remote playback**: `describeRemotePlaybackSupport`
+- **Paths and naming**: `getItemPath`, `updateItemName`
 
-See the [repository README](https://github.com/Get-Coral/Jellyfin#api-reference) for the full reference with options and return types.
+`JellyfinClient` is exported as a class, `isResumable` as a mapper helper, and
+types are additionally available from the `@get-coral/jellyfin/types` subpath.
+
+See the [repository README](https://github.com/Get-Coral/jellyfin#api-reference) for the full reference with options and return types.
 
 ## Authentication & Sessions
 
@@ -171,8 +178,10 @@ If you see this against a Jellyfin 12 server, upgrade `@get-coral/jellyfin`.
 
 Community contributions are welcome! See the [Contributing](/contributing/getting-started/) guide.
 
-## Links
+## Related
 
-- [GitHub Repository](https://github.com/Get-Coral/Jellyfin)
-- [npm Package](https://www.npmjs.com/package/@get-coral/jellyfin)
-- [Jellyfin Docs](https://jellyfin.org/)
+- [NPM packages](/libraries/npm-packages/) — everything Coral publishes
+- [Coral UI](/libraries/coral-ui/) — the component half of a Coral module
+- [Project templates](/contributing/project-templates/) — using the client in a new module
+- [Aurora](/modules/aurora/) — the largest consumer of this client
+- [Get-Coral/jellyfin on GitHub](https://github.com/Get-Coral/jellyfin) · [npm](https://www.npmjs.com/package/@get-coral/jellyfin) · [Jellyfin docs](https://jellyfin.org/)

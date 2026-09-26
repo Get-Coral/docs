@@ -1,6 +1,6 @@
 ---
 title: Getting Started Contributing
-description: How to contribute to the Coral ecosystem
+description: Set up a Coral repository locally, follow the shared tooling and commit conventions, and get a pull request merged.
 ---
 
 ## Contributing to Coral
@@ -23,12 +23,26 @@ That gives you the standard Coral app template with TypeScript, Biome, and relea
 
 Choose where you want to contribute:
 
-- **Aurora** - Video client ([github.com/Get-Coral/aurora](https://github.com/Get-Coral/aurora))
-- **Fathom** - Reading interface ([github.com/Get-Coral/fathom](https://github.com/Get-Coral/fathom))
-- **Librarian** - Library management ([github.com/Get-Coral/librarian](https://github.com/Get-Coral/librarian))
-- **KAPOW** - Karaoke manager ([github.com/Get-Coral/KAPOW](https://github.com/Get-Coral/KAPOW))
-- **Jellyfin Client** - API library ([github.com/Get-Coral/jellyfin](https://github.com/Get-Coral/jellyfin))
-- **Ecosystem** - Any module or library
+**Modules**
+
+- **Aurora** — video client ([Get-Coral/aurora](https://github.com/Get-Coral/aurora))
+- **Tide** — torrent client ([Get-Coral/tide](https://github.com/Get-Coral/tide))
+- **Librarian** — download imports and library hygiene ([Get-Coral/librarian](https://github.com/Get-Coral/librarian))
+- **Fathom** — reading interface ([Get-Coral/fathom](https://github.com/Get-Coral/fathom))
+- **Marquee** — ambient display ([Get-Coral/marquee](https://github.com/Get-Coral/marquee))
+- **KAPOW!** — karaoke queue ([Get-Coral/KAPOW](https://github.com/Get-Coral/KAPOW))
+- **Encore** — the module scaffold ([Get-Coral/encore](https://github.com/Get-Coral/encore))
+
+**Libraries and tooling**
+
+- **Jellyfin client** — typed API client ([Get-Coral/jellyfin](https://github.com/Get-Coral/jellyfin))
+- **Coral UI** — shared components ([Get-Coral/coral-ui](https://github.com/Get-Coral/coral-ui))
+- **create-coral** — the scaffolder ([Get-Coral/create-coral](https://github.com/Get-Coral/create-coral))
+- **template** — what create-coral clones ([Get-Coral/template](https://github.com/Get-Coral/template))
+- **dev-standards** — shared Biome and TypeScript configs ([Get-Coral/dev-standards](https://github.com/Get-Coral/dev-standards))
+
+If a module's page says *Early* or *Scaffold*, that is where help goes furthest.
+See [Introduction](/getting-started/introduction/) for the current status of each.
 
 ### 2. Set Up Locally
 
@@ -60,8 +74,7 @@ pnpm dev
 
 ## Branch Strategy
 
-- **main** - Production-ready code
-- **develop** - Development branch (if used)
+- **main** - Production-ready code, and the branch releases cut from
 - **feature/** - New features
 - **fix/** - Bug fixes
 - **docs/** - Documentation changes
@@ -98,19 +111,24 @@ Types:
 
 ## Code Style
 
-All Coral projects use:
+All Coral projects share their tooling through
+[`@get-coral/dev-standards`](https://github.com/Get-Coral/dev-standards):
 
-- **Biome** - Linting and formatting
-- **TypeScript** - Type checker
-- **ESLint** - Code quality
+- **[Biome](https://biomejs.dev)** — linting *and* formatting, via
+  `@get-coral/biome-config`. Coral does not use ESLint or Prettier anywhere
+- **TypeScript** — via `@get-coral/tsconfig`
+- **Vitest** — tests
 
 Run checks before submitting:
 
 ```bash
-pnpm lint
-pnpm type-check
-pnpm format
+pnpm check      # Biome lint + format check
+pnpm typecheck  # TypeScript
+pnpm test       # Vitest
 ```
+
+`pnpm lint` runs Biome with auto-fix. Note the script is `typecheck`, with no
+hyphen.
 
 ## Testing
 
@@ -159,9 +177,14 @@ Don't worry about feedback — it's how we maintain quality!
 
 ## License
 
-By contributing, you agree to license your contributions under the project's license:
-- Most Coral projects: **MIT**
-- Some may vary — check the LICENSE file
+Coral is MIT licensed. The published npm packages
+(`@get-coral/jellyfin`, `@get-coral/ui`, `@get-coral/tsconfig`,
+`@get-coral/biome-config`, `create-coral`) declare `"license": "MIT"`, and
+Aurora, KAPOW! and Coral UI carry a `LICENSE` file.
+
+Several module repositories do not yet carry one. If you are contributing to a
+repository with no `LICENSE` file, ask before assuming — and adding the file is
+itself a welcome pull request.
 
 ## Building a New Module
 

@@ -1,6 +1,6 @@
 ---
 title: create-coral CLI
-description: Scaffold a new Coral module with the official create-coral package
+description: Scaffold a new Coral module from the official template — usage, flags, and what you get.
 ---
 
 ## What it is
@@ -75,3 +75,32 @@ The CLI is the recommended path. Manual cloning of `Get-Coral/template` is mainl
 - [Contributing](/contributing/getting-started/)
 - [create-coral on npm](https://www.npmjs.com/package/create-coral)
 - [create-coral on GitHub](https://github.com/Get-Coral/create-coral)
+
+## Options
+
+```
+pnpm create coral@latest my-module
+pnpm create coral@latest
+```
+
+| Flag | Purpose |
+|---|---|
+| `--module-name <name>` | Override the module/package name |
+| `--template-repo <org/repo>` | Use a custom template repository (default `Get-Coral/template`) |
+| `--template-ref <ref>` | Template git ref: branch, tag or SHA (default `main`) |
+| `--yes` | Skip prompts and use defaults |
+| `--install` | Run `pnpm install` after scaffolding |
+| `--no-install` | Skip `pnpm install` |
+| `--help` | Show usage |
+
+Non-interactive, for CI or a script:
+
+```bash
+pnpm create coral@latest my-module --yes --install
+```
+
+## Related
+
+- [Project templates](/contributing/project-templates/) — what the scaffold contains and how to rename it
+- [Encore](/modules/encore/) — a live, unmodified copy of the template
+- [Contributing](/contributing/getting-started/) — tooling and commit conventions

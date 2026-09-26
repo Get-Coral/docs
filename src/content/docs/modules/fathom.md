@@ -1,146 +1,103 @@
 ---
 title: Fathom
-description: A reading module for Jellyfin. Books, manga, comics, and PDFs in a calm interface
+description: A cover-first reading interface for the books, manga, comics and PDFs already in your Jellyfin libraries.
 ---
 
-## Fathom
+Fathom is a reading interface for books, manga, comics and PDFs that already
+live in Jellyfin. It runs as one Docker container, reads your reading libraries
+over the Jellyfin API, and presents them cover-first rather than as rows of
+filenames.
 
-Fathom is the Coral reading room. It connects to Jellyfin and turns reading libraries into a cleaner browsing experience with a featured shelf, recent additions, library browsing, collection browsing, and rich title details with metadata.
+:::note[Early]
+Browsing works: a featured shelf, recent additions, library and collection
+browsing, and a title detail view with contributors and metadata.
 
-A cover-first interface designed for a calm, focused reading experience.
+There is **no reading-progress tracking, no ratings or reviews, no personal
+collections and no recommendation engine**. Fathom is a nicer way to look at a
+reading library, not yet a reader.
+:::
 
-### What It Is
+## Requirements
 
-Fathom provides:
-- **Featured shelf** - Curated reading selections
-- **Recent additions** - New books, manga, comics
-- **Library browsing** - Organized by collections
-- **Collection browsing** - Group related content
-- **Title detail** - Complete metadata and contributor information
-- **Local connection** - SQLite-backed Jellyfin settings, with `.env` support
+- A running Jellyfin server with at least one book, comic or mixed library
+- A Jellyfin API key and the user's **UUID** (not their username)
+- Node.js 24 LTS from source. Node 22.5 is the hard floor — Fathom uses the
+  built-in `node:sqlite` module, which does not exist on Node 18 or 20.
 
-### Supported Media
+## Running it
 
-- Books (EPUB, PDF, etc.)
-- Manga
-- Comics
-- Audiobooks and more
+```bash
+docker run -d \
+  --name fathom \
+  -p 3000:3000 \
+  -v ./fathom-data:/data \
+  -e FATHOM_DATA_DIR=/data \
+  -e JELLYFIN_URL=http://your-server:8096 \
+  -e JELLYFIN_API_KEY=your-api-key \
+  -e JELLYFIN_USER_ID=your-user-uuid \
+  getcoral/fathom:latest
+```
 
-## Getting Started
+Fathom serves on port `3000` and exposes `/healthz`.
 
-### Prerequisites
+Every `JELLYFIN_*` variable is optional. With none set, Fathom sends you to
+`/setup` on first run and stores the connection in its own SQLite database. The
+environment variables exist so an operator who configures everything through
+compose never has to open the UI; `/setup` still lets you override them locally.
 
-- Node.js 24 LTS (Node 22.5+ is the hard floor — this module uses the
-  built-in `node:sqlite` module, which does not exist on Node 18 or 20)
-- pnpm (or npm/yarn)
-- Running Jellyfin server with reading library
+## Environment
 
-### Installation
+Verified against `fathom/.env.example` and `fathom/src`.
 
-1. Clone the repository:
+| Variable | Required | Default | Purpose |
+|---|---|---|---|
+| `JELLYFIN_URL` | No | — | Jellyfin base URL. Must resolve from inside the container |
+| `JELLYFIN_API_KEY` | No | — | API key from **Dashboard → API Keys** |
+| `JELLYFIN_USER_ID` | No | — | The user's UUID, not their username |
+| `JELLYFIN_USERNAME` | No | — | Optional. Opens a real playback session |
+| `JELLYFIN_PASSWORD` | No | — | Optional, paired with `JELLYFIN_USERNAME` |
+| `FATHOM_DATA_DIR` | No | `./data` | Where `fathom.sqlite` lives |
+| `HOST` | No | `0.0.0.0` | Interface the server binds to |
+| `PORT` | No | `3000` | Port the server listens on |
+
+## Storage
+
+Fathom keeps its Jellyfin connection and local overrides in a SQLite database at
+`./data/fathom.sqlite`, or under `FATHOM_DATA_DIR` if you set it. In the
+published image that is `/data` — mount it, or you will redo setup on every
+container replacement.
+
+## Library layout
+
+Fathom reads whatever Jellyfin already exposes as a book or mixed-content
+library. It does not scan the filesystem itself and does not write to your
+media, so how you organise files on disk is entirely Jellyfin's business.
+
+## From source
+
 ```bash
 git clone https://github.com/Get-Coral/fathom.git
 cd fathom
-```
-
-2. Install dependencies:
-```bash
 pnpm install
-```
-
-3. Configure environment variables:
-```bash
-JELLYFIN_URL=http://your-server:8096
-JELLYFIN_API_KEY=your-api-key
-JELLYFIN_USER_ID=your-user-id
-```
-
-Connection details can also be configured in the web UI on first run, and will be stored locally in SQLite.
-
-4. Start the development server:
-```bash
+cp .env.example .env
 pnpm dev
 ```
 
-Fathom runs on `http://localhost:3000`
+| Script | Purpose |
+|---|---|
+| `pnpm dev` | Dev server on `:3000` |
+| `pnpm build` | Production build |
+| `pnpm start` | Run the production server (`node server.mjs`) |
+| `pnpm typecheck` | TypeScript check |
+| `pnpm check` | Biome lint + format check |
+| `pnpm test` | Vitest |
 
-## Configuration
+`pnpm start` is the production entrypoint and is what the Docker image runs.
+`pnpm preview` serves the Vite build and is for local inspection only.
 
-Fathom supports the same connection model as other Coral modules.
+## Related
 
-### Environment Variables
-
-```bash
-JELLYFIN_URL=http://your-server:8096
-JELLYFIN_API_KEY=your-api-key
-JELLYFIN_USER_ID=your-user-id
-```
-
-If these are not set, Fathom will open a setup screen on first run and store the connection details locally.
-
-### Local Storage
-
-Connection settings are stored in SQLite at `./data/fathom.sqlite` for a self-hosted setup without external database requirements.
-
-## Features
-
-### Browse
-- View all reading libraries
-- Browse by collection
-- Search across your library
-- Filter by media type
-
-### Discover
-- Featured and highlighted titles
-- Recent additions
-- Curated collections
-- Recommendation algorithms
-
-### Reading Management
-- Track reading progress
-- Mark as favorites
-- Create personal collections
-- Rating and reviews
-
-### Library Metadata
-- Full book information
-- Contributors and authors
-- Descriptions and summaries
-- Cover art and thumbnails
-
-## Development
-
-Fathom is built with:
-- [TanStack Start](https://tanstack.com/start)
-- React 19
-- [Tailwind CSS v4](https://tailwindcss.com)
-- Jellyfin API
-
-### Project Structure
-
-- `src/routes/` - Page components
-- `src/components/` - Reusable UI components
-- `src/lib/` - Utilities and helpers
-- `src/data/` - Data directory for SQLite
-
-## Deployment
-
-Deploy Fathom to:
-- Vercel
-- Docker
-- Self-hosted servers
-
-For production:
-```bash
-pnpm build
-pnpm preview
-```
-
-## Learn More
-
-- [Jellyfin API Client](/libraries/jellyfin/) - Building custom reading interfaces
-- [Contributing](/contributing/getting-started/) - Extend Fathom
-
-## Repository
-
-[Get-Coral/fathom on GitHub](https://github.com/Get-Coral/fathom)
+- [Fathom vs Kavita and Komga](https://getcoral.dev/compare/fathom-vs-kavita-komga) — whether your books belong in Jellyfin at all
+- [Aurora](/modules/aurora/) — the same idea for video
+- [Jellyfin API Client](/libraries/jellyfin/) — the typed client Fathom is built on
+- [Get-Coral/fathom on GitHub](https://github.com/Get-Coral/fathom)

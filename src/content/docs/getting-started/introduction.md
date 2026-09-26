@@ -1,18 +1,29 @@
 ---
 title: Introduction to Coral
-description: Get started with the Coral ecosystem
+description: What Coral is, how its modules relate to Jellyfin and to each other, and which one to start with.
 ---
 
 ## What is Coral?
 
 Coral is an open-source ecosystem of independent, modular interfaces for [Jellyfin](https://jellyfin.org/) — a free media system that puts you in control of your entertainment.
 
-Each Coral module is purpose-built for a specific use case:
+Each module runs as its own Docker container, reads Jellyfin over its HTTP API,
+and does one thing:
 
-- **Aurora** - Full-featured video client with personalized home, search, and playback
-- **Fathom** - Elegent reading interface for books, manga, comics, and PDFs
-- **Librarian** - Tools for organizing and enriching your media libraries
-- **KAPOW** - Interactive song selection and voting for group karaoke
+| Module | What it does | Status |
+|---|---|---|
+| [Aurora](/modules/aurora/) | Cinematic video frontend with playback that syncs back to Jellyfin | Shipping |
+| [Tide](/modules/tide/) | Torrent client with real queue limits and a memory guard | Shipping |
+| [KAPOW!](/modules/kapow/) | Karaoke queue for bars and parties, with phone-based voting | Shipping |
+| [Librarian](/modules/librarian/) | Imports finished downloads into your media tree by hardlinking | Early |
+| [Fathom](/modules/fathom/) | Cover-first reading room for books, manga, comics and PDFs | Early |
+| [Marquee](/modules/marquee/) | Always-on ambient display for a spare TV or tablet | Early |
+| [Encore](/modules/encore/) | The module scaffold. Named for a feature that is not built yet | Scaffold |
+
+**Status is not decoration.** *Shipping* means feature-complete for its stated
+purpose. *Early* means it runs and does something useful, but the surface is
+small and moving. *Scaffold* means the published image serves a placeholder.
+Each module page repeats its status and says exactly what is and is not there.
 
 ## Why Coral?
 
@@ -56,14 +67,13 @@ bun create coral@latest
 
 That bootstraps the current Coral template with TypeScript, Biome, and release automation already wired in. For the full flow, see [create-coral CLI](/getting-started/create-coral/).
 
-Choose a module to explore:
+If you want to *run* Coral rather than build on it, start here instead:
 
-- [**Aurora**](/modules/aurora/) - Start building with the video client
-- [**Fathom**](/modules/fathom/) - Set up your reading interface
-- [**Librarian**](/modules/librarian/) - Organize your media
-- [**KAPOW**](/modules/kapow/) - Create the ultimate karaoke experience
-- [**Encore**](/modules/encore/) - Template for building custom modules
-- [**Marquee**](/modules/marquee/) - Template for building custom modules
+- [**Running a stack with Docker Compose**](/getting-started/docker-compose/) —
+  Jellyfin, Aurora, Tide and Librarian together, with the mount layout that
+  makes hardlinked imports work. This is the page most people want.
+- [**Aurora**](/modules/aurora/) — the single most useful module to add to an
+  existing Jellyfin server
 
 ## Development
 
@@ -76,7 +86,8 @@ All Coral modules are built with:
 
 ## Learn More
 
-- Visit [getcoral.dev](https://getcoral.dev) for the main website
+- [getcoral.dev](https://getcoral.dev) — what each module is for, and how it
+  compares to the alternatives. These docs cover how to run them
 - Explore the [Jellyfin API Client](/libraries/jellyfin/) for building with the API
 - Use the [create-coral CLI guide](/getting-started/create-coral/) to scaffold a new module
 - See [Contributing](/contributing/getting-started/) to build your own module

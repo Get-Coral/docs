@@ -65,7 +65,7 @@ export default defineConfig({
               slug: 'modules/librarian',
             },
             {
-              label: 'KAPOW',
+              label: 'KAPOW!',
               slug: 'modules/kapow',
             },
             {
