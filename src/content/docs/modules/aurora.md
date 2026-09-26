@@ -36,7 +36,7 @@ The recommended way to self-host Aurora:
 ```bash
 docker run -d -p 3000:3000 \
   -v aurora-data:/data \
-  ghcr.io/get-coral/aurora:latest
+  getcoral/aurora:latest
 ```
 
 Open `http://localhost:3000` and complete the onboarding flow once — Aurora persists the Jellyfin connection in `/data/aurora.sqlite`. Alternatively, skip onboarding by passing the Jellyfin environment variables below.

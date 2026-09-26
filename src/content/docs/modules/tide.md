@@ -137,7 +137,7 @@ docker run -p 3000:3000 \
   -e TIDE_DOWNLOADS_DIR=/downloads \
   -e TIDE_AUTH_USERNAME=admin \
   -e TIDE_AUTH_PASSWORD=change-me \
-  ghcr.io/get-coral/tide:latest
+  getcoral/tide:latest
 ```
 
 ## Repository

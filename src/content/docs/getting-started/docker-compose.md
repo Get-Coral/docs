@@ -62,7 +62,7 @@ services:
     networks: [coral]
 
   aurora:
-    image: ghcr.io/get-coral/aurora:latest
+    image: getcoral/aurora:latest
     restart: unless-stopped
     depends_on: [jellyfin]
     ports:
@@ -85,7 +85,7 @@ services:
       start_period: 20s
 
   tide:
-    image: ghcr.io/get-coral/tide:latest
+    image: getcoral/tide:latest
     restart: unless-stopped
     ports:
       # loopback only unless you set TIDE_AUTH_USERNAME / TIDE_AUTH_PASSWORD

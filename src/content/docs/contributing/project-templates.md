@@ -78,7 +78,7 @@ If you cloned manually, replace `coral-module` throughout:
 }
 
 # In .github/workflows/docker-publish.yml
-IMAGE_NAME: my-module   # bare name; the workflow builds ghcr.io/get-coral/<IMAGE_NAME>
+IMAGE_NAME: my-module   # bare name; the workflow builds getcoral/<IMAGE_NAME>
 
 # In README.md
 # My Module
