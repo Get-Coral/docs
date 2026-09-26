@@ -12,8 +12,20 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Coral Docs',
-      description: 'Documentation for the Coral ecosystem of Jellyfin modules',
+      description:
+        "Install, configure and operate Coral's open-source Jellyfin modules. Each one runs as a Docker container and does one thing well.",
       customCss: ['./src/styles.css'],
+      // Adds the JSON-LD graph, the social card and non-blocking fonts that
+      // Starlight does not ship. See src/components/Head.astro.
+      components: {
+        Head: './src/components/Head.astro',
+      },
+      // Freshness signal. The docs drifted a long way from the code once
+      // already; showing the date makes the next drift visible.
+      lastUpdated: true,
+      editLink: {
+        baseUrl: 'https://github.com/Get-Coral/docs/edit/main/',
+      },
       expressiveCode: {
         themes: ['github-dark'],
         useStarlightDarkModeSwitch: false,

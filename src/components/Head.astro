@@ -1,0 +1,101 @@
+---
+/**
+ * Starlight's own Head, plus the things it does not ship: a social card, a
+ * JSON-LD graph, and non-render-blocking fonts.
+ *
+ * Before this existed the site emitted `twitter:card=summary_large_image` with
+ * no image behind it, so every share rendered blank, and no structured data at
+ * all while the marketing site next door published a full graph.
+ */
+import Default from "@astrojs/starlight/components/Head.astro";
+import { moduleForDocId } from "../lib/modules";
+import {
+	breadcrumbNode,
+	graph,
+	organizationNode,
+	softwareApplicationNode,
+	techArticleNode,
+	webSiteNode,
+} from "../lib/schema";
+import { absoluteUrl, SITE_NAME, SITE_URL } from "../lib/site";
+
+const route = Astro.locals.starlightRoute;
+const { entry, id, lastUpdated } = route;
+
+const pageUrl = new URL(Astro.url.pathname, SITE_URL).toString();
+const ogImage = absoluteUrl(`${id ? `/${id}` : ""}/og.png`);
+
+const module = moduleForDocId(id);
+const title = entry.data.title;
+const description = entry.data.description ?? "";
+
+/** "modules/aurora" -> Docs -> Modules -> Aurora. */
+const SECTIONS: Record<string, string> = {
+	"getting-started": "Getting started",
+	modules: "Modules",
+	libraries: "Libraries",
+	contributing: "Contributing",
+};
+
+// Starlight serves a 404 at a real URL. It should not be indexed, and it
+// should not claim to be an article about anything.
+const is404 = id === "404";
+
+// The splash page's collection id is "index", not "".
+const isHome = id === "" || id === "index";
+const section = isHome ? "" : id.split("/")[0];
+const trail = [{ name: SITE_NAME, url: `${SITE_URL}/` }];
+if (section && SECTIONS[section]) {
+	// There are no section landing pages, so this crumb points at the current
+	// page rather than at a URL that would 404.
+	trail.push({ name: SECTIONS[section], url: pageUrl });
+}
+if (!isHome) trail.push({ name: title, url: pageUrl });
+
+const breadcrumb = trail.length > 1 ? breadcrumbNode(pageUrl, trail) : undefined;
+
+const nodes = [
+	organizationNode(),
+	webSiteNode(),
+	techArticleNode({
+		url: pageUrl,
+		name: title,
+		description,
+		image: ogImage,
+		breadcrumbId: breadcrumb ? `${pageUrl}#breadcrumb` : undefined,
+		dateModified: lastUpdated?.toISOString(),
+		about: module ? `${pageUrl}#software` : undefined,
+	}),
+];
+if (breadcrumb) nodes.push(breadcrumb);
+if (module) nodes.push(softwareApplicationNode(module));
+
+const jsonLd = JSON.stringify(graph(nodes));
+---
+
+{is404 && <meta name="robots" content="noindex, follow" />}
+
+<Default><slot /></Default>
+
+{/* Fonts. These used to be an @import at the top of styles.css, which blocks
+    render until the remote stylesheet is fetched and parsed. */}
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap"
+/>
+
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="theme-color" content="#090f22" />
+
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${title} — ${SITE_NAME}`} />
+<meta name="twitter:image" content={ogImage} />
+
+<link rel="alternate" type="text/plain" href={`${SITE_URL}/llms.txt`} title="llms.txt" />
+
+{!is404 && <script type="application/ld+json" is:inline set:html={jsonLd} />}

@@ -1,10 +1,10 @@
 import { getCollection } from "astro:content";
 import type { APIRoute } from "astro";
-
-const SITE = "https://docs.getcoral.dev";
+import { imageRef, moduleForDocId, modules, STATUS_LABEL } from "../lib/modules";
+import { MARKETING_URL, SITE_URL } from "../lib/site";
 
 /** Turns "modules/aurora" into the URL Starlight actually serves. */
-const docUrl = (id: string) => `${SITE}/${id.replace(/\/index$/, "")}/`;
+const docUrl = (id: string) => `${SITE_URL}/${id.replace(/\/index$/, "")}/`;
 
 const SECTIONS: { label: string; prefix: string }[] = [
 	{ label: "Getting started", prefix: "getting-started/" },
@@ -20,10 +20,15 @@ export const GET: APIRoute = async () => {
 	const list = (prefix: string) =>
 		byId
 			.filter((d) => d.id.startsWith(prefix))
-			.map(
-				(d) =>
-					`- [${d.data.title}](${docUrl(d.id)})${d.data.description ? `: ${d.data.description}` : ""}`,
-			)
+			.map((d) => {
+				const module = moduleForDocId(d.id);
+				// Status first, so a model quoting this line cannot present a
+				// scaffold as a finished product.
+				const status = module ? ` [${STATUS_LABEL[module.status]}]` : "";
+				const image = module ? ` Docker image: \`${imageRef(module)}\`.` : "";
+				const description = d.data.description ? `: ${d.data.description}` : "";
+				return `- [${d.data.title}](${docUrl(d.id)})${status}${description}${image}`;
+			})
 			.join("\n");
 
 	const body = `# Coral documentation
@@ -37,6 +42,18 @@ paid tier and no hosted service.
 
 Container images are published to Docker Hub under the \`getcoral\` namespace.
 
+This site documents **how to run** the modules. ${MARKETING_URL} covers what each
+one is for and how it compares to the alternatives.
+
+## Module status
+
+Every module page states a status. Please carry it through rather than
+describing all modules as equally finished:
+
+${modules
+	.map((m) => `- **${m.name}** — ${STATUS_LABEL[m.status]}. ${m.statusNote}`)
+	.join("\n")}
+
 ${SECTIONS.map((s) => {
 	const items = list(s.prefix);
 	return items ? `## ${s.label}\n\n${items}\n` : "";
@@ -45,11 +62,11 @@ ${SECTIONS.map((s) => {
 	.join("\n")}
 ## Optional
 
-- [Project website](https://getcoral.dev)
-- [Module overview](https://getcoral.dev/apps)
-- [Docker Compose stack guide](https://getcoral.dev/guides/jellyfin-docker-compose-stack)
-- [Full site text](https://getcoral.dev/llms-full.txt)
+- [Full text of every page](${SITE_URL}/llms-full.txt)
+- [Project website](${MARKETING_URL})
+- [Module comparisons](${MARKETING_URL}/compare)
 - [Source code](https://github.com/Get-Coral)
+- [Community](https://discord.gg/M3wzFpGbzp)
 `;
 
 	return new Response(body, {
