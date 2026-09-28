@@ -1,9 +1,7 @@
 ---
 title: Running a stack with Docker Compose
-description: A working Jellyfin + Aurora + Tide stack, with the wiring between them explained
+description: A working Jellyfin, Aurora, Tide and Librarian stack — including the mount layout that makes hardlinked imports work.
 ---
-
-## Running a stack with Docker Compose
 
 Coral modules are independent containers. They connect to each other through a
 shared Jellyfin server and, where it matters, a shared filesystem. This page is
@@ -26,6 +24,11 @@ Jellyfin scans media/ and finds it named the way it expects
                       v
 Aurora reads Jellyfin at http://jellyfin:8096 and shows it
 ```
+
+Each service has its own page: [Aurora](/modules/aurora/),
+[Tide](/modules/tide/) and [Librarian](/modules/librarian/). The cross-module
+link between Tide and Librarian is described in
+[Module contracts](/getting-started/module-contracts/).
 
 Aurora proxies all Jellyfin traffic server-side, so the browser never contacts
 Jellyfin directly. That is why an internal service name works for
@@ -239,9 +242,13 @@ Jellyfin has to exist before Aurora can be pointed at it.
 4. Put the key, your user's **UUID** (not the username), your username and
    password, and your `PUID`/`PGID` into `.env`
 5. `docker compose up -d`
-6. Open Librarian at `http://localhost:3002`, connect it to Jellyfin, and turn
-   on the two roots it seeded. Roots arrive switched off: a mounted directory
-   is not permission to write to it.
+6. Open Librarian at `http://localhost:3002`. **It will ask you to sign in.**
+   Librarian requires a Jellyfin sign-in by default, and anything that touches
+   the filesystem additionally requires that account to be a Jellyfin
+   **administrator** — it moves and deletes files, so it does not default open
+   the way Aurora and Tide do.
+7. Connect it to Jellyfin, then turn on the two roots it seeded. Roots arrive
+   switched off: a mounted directory is not permission to write to it.
 
 `JELLYFIN_USER_ID` must be the UUID. The API key alone is enough to browse;
 username and password additionally open a real playback session, which is what
@@ -253,3 +260,8 @@ Jellyfin cannot reach VideoToolbox from a Linux container, so transcoding is
 CPU-only — Direct Play is fine, 4K transcoding is not. Jellyfin's real-time
 library monitoring also depends on inotify, which is unreliable over macOS bind
 mounts; rely on the scheduled scan or trigger one by hand.
+
+## Related
+
+- [Aurora](/modules/aurora/), [Tide](/modules/tide/), [Librarian](/modules/librarian/) — the three modules in this stack
+- [Module contracts](/getting-started/module-contracts/) — how Tide tells Librarian a download finished

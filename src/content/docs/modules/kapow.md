@@ -1,15 +1,25 @@
 ---
-title: KAPOW
-description: Comic-book karaoke queue manager for group entertainment
+title: KAPOW!
+description: A comic-book karaoke queue for bars and parties. Guests join by QR code from their own phones, vote songs up, and a TV view drives the room.
 ---
 
-## KAPOW
+KAPOW! is a karaoke queue system for bars, events and parties. The host opens a
+room, guests join by scanning a QR code on their own phone with nothing to
+install, everyone searches and votes songs up the queue, and a separate display
+view drives the screen in the room.
 
-KAPOW is a comic-book karaoke queue manager. Hosts spin up a room, guests scan a QR code and search for tracks, the crowd votes songs up the queue, and the host runs the night from a dedicated control booth.
+:::note[Shipping]
+Rooms, guest join, search, voting, host controls and the display view all work.
+:::
 
-Perfect for parties, events, and group entertainment nights.
+:::caution[Not self-contained]
+Unlike every other Coral module, KAPOW! is not a single container you point at
+Jellyfin. It needs a **Supabase** project for its database and realtime layer,
+and a **YouTube Data API v3** key for song search. Budget for both before you
+start.
+:::
 
-### How It Works
+## How It Works
 
 1. **Host creates a room** → gets a host token, a 6-character join code, and a QR code
 2. **Guests join via code or QR** → search YouTube for karaoke tracks → add to queue with their name
@@ -77,13 +87,41 @@ pnpm install
 cp .env.example .env
 ```
 
-4. Add your credentials:
-```
+4. Add your credentials to `.env`:
+
+```ini
 SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_PUBLISHABLE_KEY=eyJ...
-SUPABASE_DB_PASSWORD=your-db-password
-YOUTUBE_API_KEY=AIzaS...
+SUPABASE_PUBLISHABLE_KEY=<your Supabase publishable / anon key>
+YOUTUBE_API_KEY=<your YouTube Data API v3 key>
 ```
+
+### Environment
+
+Verified against `KAPOW/.env.example` and `KAPOW/src/lib/env.ts`.
+
+| Variable | Required | Purpose |
+|---|---|---|
+| `SUPABASE_URL` | Yes | Supabase project URL |
+| `SUPABASE_PUBLISHABLE_KEY` | Yes | Supabase publishable (anon) key |
+| `YOUTUBE_API_KEY` | Yes | YouTube Data API v3 key, used for song search |
+| `SUPABASE_DB_URL` | No | Direct database connection, for the migration scripts |
+| `SUPABASE_DB_PASSWORD` | No | Database password. Used by `supabase link` and in CI — **not** read by the app |
+| `HOST` | No | Interface the server binds to (default `0.0.0.0`) |
+| `PORT` | No | Port the server listens on (default `3000`) |
+
+`SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` each accept aliases, so an
+existing Supabase `.env` usually works unchanged:
+
+- URL: `SUPABASE_URL`, `VITE_SUPABASE_URL`
+- Key: `SUPABASE_ANON_KEY`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_KEY`,
+  `VITE_SUPABASE_ANON_KEY`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_KEY`
+
+### Database migrations
+
+`supabase/migrations/` is the source of truth for the schema; `schema.sql` is a
+reference snapshot. The `pnpm db:*` scripts (`db:start`, `db:reset`, `db:lint`,
+`db:test`, `db:push:remote`) drive it. Publishing to a remote project needs the
+`SUPABASE_ACCESS_TOKEN` and `SUPABASE_PROJECT_REF` CI secrets.
 
 ### Get Supabase Credentials
 
@@ -115,7 +153,8 @@ KAPOW runs on `http://localhost:3000`
 1. Visit `http://localhost:3000`
 2. Create a new room
 3. Share the code or QR code with guests
-4. Go to host control at `/host/:code`
+4. Go to host control at `/host/:code?token=` — the host token from step 2 is
+   required; the route will not open without it
 
 ### As Guest
 
@@ -125,20 +164,37 @@ KAPOW runs on `http://localhost:3000`
 4. Add songs to queue
 5. Vote on pending songs
 
+## Routes
+
+| Route | Description |
+|---|---|
+| `/` | Landing — create or join a room |
+| `/room/:code` | Guest view — search songs, add to queue, vote |
+| `/host/:code?token=` | Host control booth — manage queue, advance songs |
+| `/display/:code` | TV display — now playing, full-screen comic mode |
+
 ## Deployment
 
-Deploy KAPOW to:
-- Vercel
-- Docker
-- Self-hosted servers
+KAPOW! publishes to `getcoral/kapow` on Docker Hub and
+`ghcr.io/get-coral/kapow`.
 
-Configure Supabase connection for production and ensure YouTube API limits are set appropriately.
+:::caution[Check the image before you rely on it]
+The Docker build currently copies the server output to `./dist` while the
+container's start command points at `.output/server/index.mjs`. If the container
+exits immediately on start, that is why — run from source until it is fixed, and
+see [Get-Coral/KAPOW](https://github.com/Get-Coral/KAPOW) for status.
+:::
 
-Production build:
+Running from source:
+
 ```bash
 pnpm build
-pnpm preview
+pnpm start
 ```
+
+Whichever way you deploy, Supabase and the YouTube API key have to be configured
+for the environment, and YouTube's daily quota is the limit you will hit first
+on a busy night.
 
 ## Architecture
 
@@ -166,6 +222,8 @@ Uses Supabase realtime to push:
 - [Supabase Docs](https://supabase.com/docs)
 - [Contributing](/contributing/getting-started/)
 
-## Repository
+## Related
 
-[Get-Coral/KAPOW on GitHub](https://github.com/Get-Coral/KAPOW)
+- [KAPOW! vs Karaoke Eternal](https://getcoral.dev/compare/kapow-vs-karaoke-eternal) — local library versus YouTube search
+- [Encore](/modules/encore/) — the planned equivalent for Jellyfin music requests
+- [Get-Coral/KAPOW on GitHub](https://github.com/Get-Coral/KAPOW)

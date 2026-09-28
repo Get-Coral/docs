@@ -5,16 +5,18 @@
   --sl-font-serif: 'Fraunces', serif;
 
   --sl-color-white: #f0ede8;
-  --sl-color-gray-1: #0d1324;
-  --sl-color-gray-2: #121b2e;
-  --sl-color-gray-3: #1a2438;
-  --sl-color-gray-4: #273347;
-  --sl-color-gray-5: #36445a;
-  --sl-color-gray-6: #55627a;
-  --sl-color-gray-7: #77839a;
-  --sl-color-gray-8: #a2acbf;
-  --sl-color-gray-9: #ced6e2;
-  --sl-color-gray-10: #e8edf5;
+  /* Starlight's scale runs light to dark: gray-1 is body text, gray-5 is a
+     border, gray-6 and gray-7 are surfaces. This palette had it reversed, so
+     every component that styled text with gray-3 rendered it at #1a2438 on a
+     #090f22 background — 1.23:1, effectively invisible. Same hues, correct
+     order. Contrast against the background is noted per step. */
+  --sl-color-gray-1: #e8edf5;  /* 16.2:1  body text */
+  --sl-color-gray-2: #ced6e2;  /* 13.0:1  emphasised text, hover borders */
+  --sl-color-gray-3: #a2acbf;  /*  8.3:1  secondary text, card descriptions */
+  --sl-color-gray-4: #77839a;  /*  5.0:1  muted text — the AA floor */
+  --sl-color-gray-5: #55627a;  /*  3.1:1  borders, per WCAG 1.4.11 */
+  --sl-color-gray-6: #1a2438;  /*         surface */
+  --sl-color-gray-7: #121b2e;  /*         surface, hover fill */
 
   --sl-color-accent: #2dd4bf;
   --sl-color-accent-light: #5ee7d9;
@@ -38,16 +40,18 @@
 html[data-theme='light'] {
   color-scheme: dark;
   --sl-color-white: #f0ede8;
-  --sl-color-gray-1: #0d1324;
-  --sl-color-gray-2: #121b2e;
-  --sl-color-gray-3: #1a2438;
-  --sl-color-gray-4: #273347;
-  --sl-color-gray-5: #36445a;
-  --sl-color-gray-6: #55627a;
-  --sl-color-gray-7: #77839a;
-  --sl-color-gray-8: #a2acbf;
-  --sl-color-gray-9: #ced6e2;
-  --sl-color-gray-10: #e8edf5;
+  /* Starlight's scale runs light to dark: gray-1 is body text, gray-5 is a
+     border, gray-6 and gray-7 are surfaces. This palette had it reversed, so
+     every component that styled text with gray-3 rendered it at #1a2438 on a
+     #090f22 background — 1.23:1, effectively invisible. Same hues, correct
+     order. Contrast against the background is noted per step. */
+  --sl-color-gray-1: #e8edf5;  /* 16.2:1  body text */
+  --sl-color-gray-2: #ced6e2;  /* 13.0:1  emphasised text, hover borders */
+  --sl-color-gray-3: #a2acbf;  /*  8.3:1  secondary text, card descriptions */
+  --sl-color-gray-4: #77839a;  /*  5.0:1  muted text — the AA floor */
+  --sl-color-gray-5: #55627a;  /*  3.1:1  borders, per WCAG 1.4.11 */
+  --sl-color-gray-6: #1a2438;  /*         surface */
+  --sl-color-gray-7: #121b2e;  /*         surface, hover fill */
   --sl-color-accent: #2dd4bf;
   --sl-color-accent-light: #5ee7d9;
   --sl-color-accent-lighter: #99f6e4;
@@ -297,9 +301,27 @@ table {
   margin: 1.25rem 0 1.75rem;
   border-collapse: separate !important;
   border-spacing: 0;
-  overflow: hidden;
   border-radius: 0.65rem;
   border-color: rgba(45, 212, 191, 0.2) !important;
+}
+
+/* `overflow: hidden` used to live on the table, to clip its rounded corners.
+   It clipped the last column too, which the four-column environment tables
+   made obvious — the Purpose text simply ran off the edge with no scrollbar.
+   The corners are rounded by hand below instead. */
+table thead tr th:first-child {
+  border-top-left-radius: 0.65rem;
+}
+
+table thead tr th:last-child {
+  border-top-right-radius: 0.65rem;
+}
+
+/* Identifiers like TIDE_MEMORY_CHECK_INTERVAL_MS set a min-content width the
+   column cannot otherwise shrink below, pushing the whole table wide. */
+th,
+td {
+  overflow-wrap: anywhere;
 }
 
 table thead {
@@ -368,23 +390,27 @@ strong {
   font-weight: 600;
 }
 
-/* Mobile sidebar when expanded */
+/* The expanded mobile sidebar sits over page content, so it needs an opaque
+   fill; --sl-color-bg-sidebar is deliberately translucent for the desktop rail.
+   Nothing here sets a colour: these panels used to force one on every
+   descendant with `*`, which painted over the current-page pill's dark text
+   and left it at 1.6:1 on the teal fill. Starlight's own colours are correct
+   now that the grey scale is the right way round. */
 #starlight__sidebar,
 .sidebar-pane {
   background-color: #0a1019 !important;
-  color: #f0ede8 !important;
 }
 
-.sidebar-pane * {
-  color: #f0ede8 !important;
+/* Navigation, not prose: the rail stays neutral so the current-page pill is
+   the only accent in it. Set on the anchor, never on its descendants — the
+   <span> inside is what the old `*` rule was painting over. */
+.sidebar-content a {
+  color: var(--sl-color-gray-2);
+  font-weight: 400;
 }
 
-.sidebar-pane a {
-  color: #5ee7d9 !important;
-}
-
-.sidebar-pane a:hover {
-  color: #f0ede8 !important;
+.sidebar-content a:hover {
+  color: var(--sl-color-white);
 }
 
 
@@ -403,11 +429,10 @@ strong {
 }
 
 #starlight__on-this-page--mobile,
-#starlight__on-this-page--mobile *,
 #starlight__on-this-page--mobile .toggle {
   color: #5ee7d9 !important;
-  fill: #5ee7d9 !important;
-  stroke: #5ee7d9 !important;
+  fill: currentColor;
+  stroke: currentColor;
   background-color: transparent !important;
 }
 
@@ -418,19 +443,6 @@ strong {
 
 #starlight__mobile-toc[open] {
   background-color: #0a1019 !important;
-}
-
-/* All content inside the mobile toc details element */
-#starlight__mobile-toc > * {
-  background-color: #0a1019 !important;
-  color: #f0ede8 !important;
-}
-
-#starlight__mobile-toc ul,
-#starlight__mobile-toc ol,
-#starlight__mobile-toc li {
-  background-color: #0a1019 !important;
-  color: #f0ede8 !important;
 }
 
 #starlight__mobile-toc a {
@@ -446,27 +458,6 @@ summary {
   background-color: transparent !important;
 }
 
-/* Force dark background on all toc/toc-list content */
-:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) {
-  background-color: #0a1019 !important;
-  color: #f0ede8 !important;
-}
-
-:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) a,
-:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) li,
-:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) ul,
-:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) ol {
-  background-color: #0a1019 !important;
-  color: #f0ede8 !important;
-}
-
-:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) a {
-  color: #5ee7d9 !important;
-}
-
-:is(.toc-list, [class*="toc"], .mobile-starlight-toc, .toc) a:hover {
-  color: #f0ede8 !important;
-}
 button[aria-label="Menu"] {
   color: #f0ede8 !important;
   fill: #f0ede8 !important;

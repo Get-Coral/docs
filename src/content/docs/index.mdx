@@ -6,47 +6,96 @@ hero:
   title: Coral Docs
   tagline: Purpose-built interfaces for your self-hosted Jellyfin media
   actions:
-    - text: Get Started
-      link: /getting-started/introduction/
+    - text: Run a full stack
+      link: /getting-started/docker-compose/
       icon: right-arrow
-    - text: Explore All Modules
-      link: /modules/aurora/
-      icon: rocket
+    - text: What is Coral?
+      link: /getting-started/introduction/
+      icon: information
       variant: minimal
 ---
 
-import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+import { Card, CardGrid, Aside, LinkCard } from '@astrojs/starlight/components';
 
-## 🎯 Featured Modules
+Coral is an open-source ecosystem of independent Jellyfin modules. Each module
+runs as its own Docker container, reads your Jellyfin server over its HTTP API,
+and does one thing well. Modules never share a database — Jellyfin stays the
+source of truth. Everything is MIT licensed, with no paid tier and no hosted
+service.
 
-<CardGrid stagger>
-	<Card title="Aurora" icon="video">
-		Premium video frontend. Cinematic home experience, rich detail views, favorites, and smart recommendations.
-	</Card>
-	<Card title="Fathom" icon="open-book">
-		Elegant reading interface. Books, manga, comics, PDFs in a cover-first, distraction-free design.
-	</Card>
-	<Card title="Librarian" icon="setting">
-		Media management hub. Organize, enrich, deduplicate, and maintain your entire library.
-	</Card>
-	<Card title="Tide" icon="download">
-		Torrent download board. Queue controls, file priorities, piece maps, and optional auth for self-hosted setups.
-	</Card>
-	<Card title="KAPOW" icon="star">
-		Interactive karaoke hub. Create rooms, search songs, vote as a group, and manage playback.
-	</Card>
+These docs cover **how to run them**. For what each module is for and how it
+compares to the alternatives, see [getcoral.dev](https://getcoral.dev).
+
+## Start here
+
+<CardGrid>
+	<LinkCard
+		title="Run a full stack"
+		href="/getting-started/docker-compose/"
+		description="Jellyfin, Aurora, Tide and Librarian in one compose file — including the mount layout that makes hardlinked imports work. Most people want this page."
+	/>
+	<LinkCard
+		title="Introduction"
+		href="/getting-started/introduction/"
+		description="What Coral is, how modules relate to Jellyfin and to each other, and the status of each one."
+	/>
+</CardGrid>
+
+## Modules
+
+Every module states a status. **Shipping** is feature-complete for its stated
+purpose, **Early** runs and does something useful but has a small and moving
+surface, and **Scaffold** means the published image serves a placeholder.
+
+<CardGrid>
+	<LinkCard
+		title="Aurora — Shipping"
+		href="/modules/aurora/"
+		description="Cinematic video frontend. Rails, rich detail pages, TV mode, and playback that reports progress back to Jellyfin."
+	/>
+	<LinkCard
+		title="Tide — Shipping"
+		href="/modules/tide/"
+		description="Torrent client with real queue limits, per-file piece priorities, and a memory guard that pauses before the container dies."
+	/>
+	<LinkCard
+		title="KAPOW! — Shipping"
+		href="/modules/kapow/"
+		description="Karaoke queue for bars and parties. Guests join by QR code and vote songs up; a TV view drives the room. Needs Supabase."
+	/>
+	<LinkCard
+		title="Librarian — Early"
+		href="/modules/librarian/"
+		description="Imports finished downloads into your media tree by hardlinking — zero extra disk, and the torrent keeps seeding."
+	/>
+	<LinkCard
+		title="Fathom — Early"
+		href="/modules/fathom/"
+		description="Cover-first reading room for the books, manga, comics and PDFs already in Jellyfin."
+	/>
+	<LinkCard
+		title="Marquee — Early"
+		href="/modules/marquee/"
+		description="Turns a spare TV or tablet into an always-on display of what is playing now and what was recently added."
+	/>
+	<LinkCard
+		title="Encore — Scaffold"
+		href="/modules/encore/"
+		description="The Coral module scaffold. The published image serves a placeholder; the guest music requests it is named for are not built yet."
+	/>
 </CardGrid>
 
 ## Why Coral?
 
-Most media centers try to do *everything*. Coral does one thing really well — provide beautiful, purpose-built interfaces for each type of content.
+Most media centers try to do *everything*. Coral does one thing really well —
+provide beautiful, purpose-built interfaces for each type of content.
 
 **Choose what you need:**
-- Run Aurora for movies and shows
-- Add Fathom for your reading library
-- Use Librarian to manage it all
-- Use Tide for torrent intake and queue control
-- Deploy KAPOW for group entertainment
+- Run [Aurora](/modules/aurora/) for movies and shows
+- Add [Fathom](/modules/fathom/) for your reading library
+- Use [Tide](/modules/tide/) for torrent intake and queue control
+- Let [Librarian](/modules/librarian/) file what Tide finishes
+- Deploy [KAPOW!](/modules/kapow/) for group entertainment
 - Mix and match what works for you
 
 **Built for self-hosters:**
@@ -55,65 +104,62 @@ Most media centers try to do *everything*. Coral does one thing really well — 
 - Local-first where possible
 - Full control, full privacy
 
-## 🪸 Start Fast with the CLI
+## Building a module
 
-The fastest way to build a new Coral module is with the official scaffolder:
+The fastest way to start a new Coral module is the official scaffolder:
 
 ```bash
 pnpm create coral@latest
-npm create coral@latest
-bun create coral@latest
 ```
 
-It pulls the latest module template and sets up a TypeScript, Biome, and release-ready Coral app. See the dedicated [create-coral CLI guide](/getting-started/create-coral/) for the full workflow.
-
-## 🏗️ Built on Modern Tech
-
-Every Coral module is crafted with the latest tools:
+It pulls the latest module template and sets up a TypeScript, Biome and
+release-ready Coral app.
 
 <CardGrid>
-	<Card title="TanStack Start" icon="rocket">
-		Full-stack React framework with server-side rendering and modern DX.
-	</Card>
-	<Card title="Tailwind CSS v4" icon="palette">
-		Modern utility-first styling with responsive design and dark mode.
-	</Card>
-	<Card title="TypeScript" icon="approve">
-		Type-safe code across frontend and backend for confidence and clarity.
-	</Card>
-	<Card title="Jellyfin API" icon="log">
-		Direct Jellyfin integration keeps your data where it belongs — on your server.
-	</Card>
+	<LinkCard
+		title="create-coral CLI"
+		href="/getting-started/create-coral/"
+		description="Usage, flags, and what the scaffolder gives you."
+	/>
+	<LinkCard
+		title="Project templates"
+		href="/contributing/project-templates/"
+		description="What the template contains and the conventions every module follows."
+	/>
+	<LinkCard
+		title="Module contracts"
+		href="/getting-started/module-contracts/"
+		description="How two modules talk when Jellyfin cannot answer the question — manifests, tokens and capabilities."
+	/>
+	<LinkCard
+		title="Contributing"
+		href="/contributing/getting-started/"
+		description="Local setup, shared tooling, and commit conventions."
+	/>
 </CardGrid>
 
-## 🔧 Building with Coral
-
-Interested in creating your own module?
-
-- Start with [Project Templates](/contributing/project-templates/) for a pre-configured foundation
-- Check [Contributing](/contributing/getting-started/) for setup and best practices
-- Explore [Encore](/modules/encore/) or [Marquee](/modules/marquee/) as reference implementations
-- Use the [Jellyfin API Client](/libraries/jellyfin/) for seamless Jellyfin integration
-- Start with the [create-coral CLI guide](/getting-started/create-coral/)
-- Browse all official [NPM Packages](/libraries/npm-packages/)
-
-## 📦 More Modules & Tools
+## Libraries
 
 <CardGrid>
-	<Card title="Encore" icon="rocket">
-		Moderated guest music requests. Guests browse and queue Jellyfin music while the host controls what plays.
-	</Card>
-	<Card title="Marquee" icon="rocket">
-		Ambient now-playing display. A passive screen for TVs and monitors that surfaces what's playing and what's next.
-	</Card>
-	<Card title="Jellyfin Client" icon="external">
-		Type-safe TypeScript client library for the Jellyfin API.
-	</Card>
-	<Card title="create-coral" icon="download">
-		Official CLI for scaffolding a Coral module with the current template and defaults.
-	</Card>
+	<LinkCard
+		title="Jellyfin API client"
+		href="/libraries/jellyfin/"
+		description="@get-coral/jellyfin — a fetch-based, fully typed client with zero runtime dependencies."
+	/>
+	<LinkCard
+		title="Coral UI"
+		href="/libraries/coral-ui/"
+		description="@get-coral/ui — the shared React components and design tokens behind every module."
+	/>
+	<LinkCard
+		title="NPM packages"
+		href="/libraries/npm-packages/"
+		description="All five published packages, and which ones you actually need."
+	/>
 </CardGrid>
 
 <Aside type="tip">
-All Coral modules are open source and self-hosted. No subscriptions, no tracking, just your media your way.
+All Coral modules are open source and self-hosted. No subscriptions, no tracking,
+just your media your way. Container images live on Docker Hub under the
+[`getcoral`](https://hub.docker.com/u/getcoral) namespace.
 </Aside>

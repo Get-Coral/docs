@@ -1,11 +1,17 @@
 ---
 title: Tide
-description: A torrent downloader for Jellyfin-adjacent media workflows with queue controls, piece maps, and optional Jellyfin sign-in
+description: A torrent client with a web interface for self-hosted download boxes — real queue limits, per-file piece priorities and a memory guard.
 ---
 
-## Tide
+Tide is a torrent client with a web interface, built for self-hosted download
+boxes. It runs as one Docker container, enforces real active-download and
+seeding limits, lets you set per-file piece priorities, and pauses torrents
+automatically as it approaches its memory cap.
 
-Tide is Coral's torrent download manager. It gives you a cleaner, self-hosted interface for adding torrents, managing queue order, limiting active downloads and seeders, adjusting file priorities, and inspecting live swarm health with an expandable piece map.
+:::note[Shipping]
+Queue controls, piece maps, seeding goals, SQLite-backed state, the memory guard
+and optional Jellyfin sign-in are all implemented.
+:::
 
 ## Highlights
 
@@ -70,18 +76,26 @@ Tide runs on `http://localhost:3000`.
 
 ### Environment Variables
 
-```bash
-TIDE_DOWNLOADS_DIR=./data/downloads
-TIDE_DATA_DIR=./data
+Verified against `tide/.env.example` and `tide/src`.
 
-# Optional HTTP basic auth
-TIDE_AUTH_USERNAME=admin
-TIDE_AUTH_PASSWORD=change-me
+| Variable | Required | Default | Purpose |
+|---|---|---|---|
+| `TIDE_DOWNLOADS_DIR` | No | `./data/downloads` | Where finished downloads land |
+| `TORRENT_DOWNLOADS_DIR` | No | — | Legacy alias, still honoured when `TIDE_DOWNLOADS_DIR` is unset |
+| `TIDE_DATA_DIR` | No | `./data` | Where `tide.sqlite` lives |
+| `TIDE_AUTH_USERNAME` | No | — | HTTP basic auth. Both halves must be set |
+| `TIDE_AUTH_PASSWORD` | No | — | HTTP basic auth |
+| `TIDE_JELLYFIN_URL` | No | — | Jellyfin server used purely as an identity provider |
+| `TIDE_REQUIRE_LOGIN` | No | stored setting | Forces the sign-in requirement on or off, overriding SQLite |
+| `TIDE_MEMORY_LIMIT_MB` | No | cgroup cap | Overrides the detected container memory limit |
+| `TIDE_MEMORY_PAUSE_MB` | No | — | Pause torrents above this RSS |
+| `TIDE_MEMORY_RESUME_MB` | No | — | Resume only once RSS falls below this |
+| `TIDE_MEMORY_CHECK_INTERVAL_MS` | No | `5000` | How often the guard re-checks memory |
+| `CORAL_SERVICE_TOKEN` | No | — | Grants another module full access without issuing a token in the UI |
+| `HOST` | No | `0.0.0.0` | Interface the server binds to |
+| `PORT` | No | `3000` | Port the server listens on |
 
-# Optional Jellyfin sign-in. The URL can also be set from the UI.
-TIDE_JELLYFIN_URL=https://jellyfin.example.com
-TIDE_REQUIRE_LOGIN=true
-```
+Tide serves on port `3000` and exposes `/healthz`.
 
 ### Storage
 
@@ -96,6 +110,32 @@ Tide stores persistent state in SQLite at `./data/tide.sqlite` by default. That 
 ### Downloads Directory
 
 Downloaded content goes to `TIDE_DOWNLOADS_DIR`. If that variable is missing, Tide falls back to `./data/downloads`.
+
+### Memory safety
+
+Tide runs an RSS-based memory guard over torrent activity. If it can read the
+container memory cap from cgroups, the guard enables itself; when RSS crosses
+the pause threshold it pauses active torrents and disconnects peers, and
+activity resumes only once RSS falls back below the lower resume threshold.
+
+For an 8 GB container limit on a NAS, a reasonable starting point:
+
+```bash
+TIDE_MEMORY_LIMIT_MB=8192
+TIDE_MEMORY_PAUSE_MB=7168
+TIDE_MEMORY_RESUME_MB=6144
+```
+
+Without a `mem_limit` on the container there is nothing for Tide to read from
+cgroups and nothing to pause against, so set one — or set
+`TIDE_MEMORY_LIMIT_MB` explicitly.
+
+## Cross-module access
+
+Tide publishes a Coral module manifest at `/api/coral/manifest` and implements
+the `downloads.list` and `downloads.events` capabilities, which is how
+[Librarian](/modules/librarian/) learns that a download has finished. See
+[Module contracts](/getting-started/module-contracts/).
 
 ## Access Control
 
@@ -177,6 +217,10 @@ docker run -p 3000:3000 \
   getcoral/tide:latest
 ```
 
-## Repository
+## Related
 
-[Get-Coral/tide on GitHub](https://github.com/Get-Coral/tide)
+- [Running a stack with Docker Compose](/getting-started/docker-compose/) — Tide feeding Librarian, with the mount layout worked out
+- [Librarian](/modules/librarian/) — imports what Tide finishes
+- [Module contracts](/getting-started/module-contracts/) — Tide is the worked example
+- [Tide vs qBittorrent](https://getcoral.dev/compare/tide-vs-qbittorrent) — an honest comparison
+- [Get-Coral/tide on GitHub](https://github.com/Get-Coral/tide)

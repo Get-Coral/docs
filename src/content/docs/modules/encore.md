@@ -1,98 +1,87 @@
 ---
 title: Encore
-description: Moderated guest music requests for house-party mode
+description: The Coral module scaffold. The published image serves a placeholder — the guest music requests it is named for are not built yet.
 ---
 
-## Encore
+Encore is the reference scaffold for a Coral module: TanStack Start, Tailwind v4,
+Biome and release automation, wired together and ready to build on. It is named
+for a planned feature — moderated guest music requests against a Jellyfin music
+library — that **does not exist yet**.
 
-Encore is a Coral ecosystem module built on TanStack Start, Tailwind v4, and the Jellyfin API. It serves as a template and foundation for building new Coral applications.
+:::caution[Scaffold — do not deploy this expecting a product]
+`getcoral/encore` builds and runs, but `src/` is the unmodified Coral template,
+so the container serves a placeholder page that reads *"Coral Module — Ready to
+build."* There is no music browsing, no request queue, no host approval, and no
+Jellyfin connection of any kind.
 
-## Getting Started
+If you want a working Coral module today, see [Aurora](/modules/aurora/),
+[Tide](/modules/tide/) or [KAPOW!](/modules/kapow/).
+:::
 
-### Prerequisites
+## What it is useful for
 
-- Node.js 24 LTS
-- pnpm (or npm/yarn)
+As a starting point. Encore tracks the current template, so it is a live example
+of how a Coral module is laid out — routing, the Node server entrypoint, the
+Docker build, and the release workflow.
 
-### Installation
+To start your own module from the same base, use the CLI rather than forking
+Encore:
 
-1. Clone the repository:
+```bash
+pnpm create coral@latest
+```
+
+See the [create-coral CLI guide](/getting-started/create-coral/) and
+[Project templates](/contributing/project-templates/).
+
+## Requirements
+
+- Node.js 24 LTS. Node 22.5 is the hard floor — the template uses the built-in
+  `node:sqlite` module, which does not exist on Node 18 or 20.
+- pnpm
+
+## Running it
+
+```bash
+docker run -p 3000:3000 getcoral/encore:latest
+```
+
+Encore serves on port `3000` and exposes `/healthz`.
+
+## Environment
+
+The entire environment surface, verified against `encore/.env.example` and
+`encore/src`:
+
+| Variable | Required | Default | Purpose |
+|---|---|---|---|
+| `HOST` | No | `0.0.0.0` | Interface the server binds to |
+| `PORT` | No | `3000` | Port the server listens on |
+
+There are no `JELLYFIN_*` variables. Nothing in Encore reads them, and setting
+them has no effect.
+
+## From source
+
 ```bash
 git clone https://github.com/Get-Coral/encore.git
 cd encore
-```
-
-2. Install dependencies:
-```bash
 pnpm install
-```
-
-3. Configure environment variables:
-```bash
-cp .env.example .env
-JELLYFIN_URL=http://your-server:8096
-JELLYFIN_API_KEY=your-api-key
-JELLYFIN_USER_ID=your-user-id
-```
-
-4. Start development server:
-```bash
 pnpm dev
 ```
 
-Encore runs on `http://localhost:3000`
+| Script | Purpose |
+|---|---|
+| `pnpm dev` | Dev server on `:3000` |
+| `pnpm build` | Production build |
+| `pnpm start` | Run the production server (`node server.mjs`) |
+| `pnpm typecheck` | TypeScript check |
+| `pnpm check` | Biome lint + format check |
+| `pnpm test` | Vitest |
 
-## Stack
+## Related
 
-| Tool | Purpose |
-|------|---------|
-| [TanStack Start](https://tanstack.com/start) | Full-stack React framework |
-| [TanStack Router](https://tanstack.com/router) | Type-safe file-based routing |
-| [TanStack Query](https://tanstack.com/query) | Server state management |
-| [Tailwind v4](https://tailwindcss.com) | Styling |
-| [Biome](https://biomejs.dev) | Linting & formatting |
-| [@get-coral/jellyfin](https://github.com/Get-Coral/jellyfin) | Jellyfin API client |
-| [Vitest](https://vitest.dev) | Testing |
-
-## Available Scripts
-
-```bash
-pnpm dev        # Start dev server on :3000
-pnpm build      # Production build
-pnpm start      # Run production server
-pnpm typecheck  # TypeScript check
-pnpm check      # Biome lint + format check
-pnpm lint       # Biome lint with auto-fix
-pnpm test       # Run tests
-```
-
-## Deployment
-
-### Docker
-
-```bash
-# Build
-docker build -t encore .
-
-# Run
-docker run -p 3000:3000 \
-  -e JELLYFIN_URL=http://your-nas:8096 \
-  -e JELLYFIN_API_KEY=your-key \
-  -e JELLYFIN_USER_ID=your-user-id \
-  encore
-```
-
-### CI/CD
-
-Automated workflows handle:
-- **ci.yml** - Run on every PR and push (typecheck, lint, test, build)
-- **docker-publish.yml** - Publish to GHCR on release
-- **release-please.yml** - Automated versioning and releases
-
-## Contributing
-
-See [Contributing](/contributing/getting-started/) to contribute to Encore.
-
-## Repository
-
-[Get-Coral/encore on GitHub](https://github.com/Get-Coral/encore)
+- [Project templates](/contributing/project-templates/) — what the scaffold contains
+- [create-coral CLI](/getting-started/create-coral/) — the supported way to start a module
+- [Module contracts](/getting-started/module-contracts/) — how modules talk to each other
+- [Get-Coral/encore on GitHub](https://github.com/Get-Coral/encore)
