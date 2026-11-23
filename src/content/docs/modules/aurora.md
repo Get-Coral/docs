@@ -1,15 +1,12 @@
 ---
 title: Aurora
-description: A cinematic web frontend for Jellyfin. One Docker container, your existing server, and playback progress that syncs back.
+description: Set up Aurora for Jellyfin or IPTV. Learn how to configure Docker, add IPTV sources, and build for TV, desktop, and Meta Quest.
 ---
 
-Aurora is a cinematic web frontend for Jellyfin. It runs as one Docker container
-alongside your existing server, reads your libraries over the Jellyfin API, and
-reports playback progress back to Jellyfin. It keeps Jellyfin as the source of
-truth and never duplicates your data.
+Aurora is a media client for a Jellyfin server, your own IPTV sources, or both.
 
 :::note[Shipping]
-The most complete Coral module. Everything below is implemented.
+The setup below covers [Aurora 1.16.0](https://github.com/Get-Coral/aurora/releases/tag/v1.16.0).
 :::
 
 ## Highlights
@@ -44,7 +41,16 @@ docker run -d -p 3000:3000 \
   getcoral/aurora:latest
 ```
 
-Open `http://localhost:3000` and complete the onboarding flow once — Aurora persists the Jellyfin connection in `/data/aurora.sqlite`. Alternatively, skip onboarding by passing the Jellyfin environment variables below.
+Open `http://localhost:3000` and follow the Jellyfin setup, or
+[configure IPTV](#iptv-sources) and choose **Use Aurora with IPTV only**.
+Keep the `/data` volume when recreating the container so Aurora retains its setup.
+
+To upgrade an existing Compose service named `aurora`:
+
+```bash
+docker compose pull aurora
+docker compose up -d aurora
+```
 
 Aurora serves on port `3000` and exposes `/healthz`, which returns non-200 until
 the server is ready — useful as a Docker healthcheck.
@@ -59,7 +65,7 @@ For a full stack with Jellyfin, Tide and Librarian alongside it, see
 - Node.js 24 LTS (Node 22.5+ is the hard floor — this module uses the
   built-in `node:sqlite` module, which does not exist on Node 18 or 20)
 - pnpm
-- A running Jellyfin server
+- A running Jellyfin server for Jellyfin development, or an IPTV source for IPTV-only setup
 
 ### Setup
 
@@ -75,7 +81,10 @@ Aurora will be available at `http://localhost:3000`.
 
 ## Configuration
 
-All configuration can be done through the in-app setup and settings screens; environment variables are optional overrides.
+Configure Jellyfin in setup or via environment variables. Self-hosted IPTV
+also needs a server-side origin allowlist. The variables below are checked
+against [Aurora's tagged `.env.example`](https://github.com/Get-Coral/aurora/blob/v1.16.0/.env.example)
+and runtime configuration.
 
 | Variable | Purpose |
 | --- | --- |
@@ -86,6 +95,11 @@ All configuration can be done through the in-app setup and settings screens; env
 | `AURORA_REQUIRE_LOGIN` | `true` forces required sign-in and locks the toggle |
 | `AURORA_MULTI_USER` | `true` forces multi-user profiles and locks the toggle |
 | `AURORA_DATA_DIR` | Where the local SQLite database lives (default `./data`) |
+| `AURORA_IPTV_ORIGINS` | Comma-separated provider origins. Required to enable IPTV on the self-hosted server |
+| `AURORA_IPTV_STRICT_ORIGINS` | Set to `true` to require listed origins for redirects, media segments, and artwork as well |
+| `AURORA_IPTV_FFMPEG` | Optional FFmpeg executable in the server environment for compatible playback of formats such as MKV and AVI |
+| `AURORA_IPTV_FFPROBE` | Optional ffprobe executable path. Aurora normally looks beside FFmpeg |
+| `AURORA_IPTV_SOURCE_KEY` | Optional 64-character hex key used to encrypt saved IPTV sources. Otherwise Aurora generates a key in the data directory |
 | `HOST` | Interface the server binds to (default `0.0.0.0`) |
 | `PORT` | Port the server listens on (default `3000`) |
 | `AURORA_STREAM_TOKEN_SECRET` | Signing secret for AirPlay/Cast stream URLs. Generated and stored automatically if unset — set it to keep URLs valid across data directories. Changing it invalidates every stream URL already handed to a TV |
@@ -98,6 +112,30 @@ All configuration can be done through the in-app setup and settings screens; env
 them — they are leftovers from a dropped experiment, and setting them does
 nothing.
 
+## IPTV sources
+
+1. Set `AURORA_IPTV_ORIGINS` on the Aurora server and restart it. In Compose,
+   add the variable under the Aurora service's `environment` and recreate the
+   service. Use the provider's origin, such as `https://provider.example`.
+   Include the scheme and any non-default port. Keep paths and credentials in
+   the source settings.
+2. Open **Settings → IPTV sources** as an administrator. For a fresh install
+   without Jellyfin, choose **Use Aurora with IPTV only** during setup.
+3. Add an **Xtream Codes** server with its credentials, an **M3U playlist URL**,
+   or a **direct stream URL**. Add an optional XMLTV URL if your provider
+   supplies a separate programme guide.
+4. Open **Live TV** to browse channels and the guide. Available films and series
+   depend on the source.
+
+When IPTV is enabled alongside Jellyfin, Aurora can show provider content
+alongside your library. The provider guide and catch-up depend on the source.
+Use Jellyfin's own client for its tuner and DVR features.
+
+If a provider redirects to other public origins for playback, check whether
+strict origins are enabled. See the
+[release README](https://github.com/Get-Coral/aurora/tree/v1.16.0#iptv-sources)
+for provider-specific playback and FFmpeg options.
+
 ## User Profiles & Sign-In
 
 Aurora supports shared households out of the box:
@@ -105,6 +143,12 @@ Aurora supports shared households out of the box:
 - **Profiles**: enable multi-user mode in Settings → User profiles (or `AURORA_MULTI_USER=true`). Everyone picks their own Jellyfin user on a profile screen when opening Aurora.
 - **Required sign-in**: if your instance is reachable from the internet, enable it in Settings → Security (or `AURORA_REQUIRE_LOGIN=true`). Everyone must then sign in with their Jellyfin username and password before Aurora serves anything — sessions are validated against Jellyfin, stored server-side, and each user's playback runs under their own Jellyfin session.
 - **Admin dashboard**: Jellyfin administrators can create, disable, and delete users, edit parental controls, trigger library scans, and watch active sessions from `/admin`.
+
+## Playback
+
+Move along the progress bar to preview a scene when thumbnails are available.
+The bar also shows the buffered range. Click or drag the seek control to jump
+to another point, including in Safari.
 
 ## Deployment
 
@@ -126,6 +170,28 @@ Aurora also ships PWA and Capacitor wrappers for installable web, Android and
 iOS builds. Those need JDK 21 and the `pnpm cap:*` scripts; the
 [repository README](https://github.com/Get-Coral/aurora#readme) is the reference
 for that workflow.
+
+### Android TV and Google TV
+
+The Android build has a TV launcher entry and remote navigation. Use the
+directional pad and OK to browse. In the live player, Up/Down or the channel
+buttons change channels. To test from source, select an Android TV device or
+emulator and run `pnpm cap:run:android`. See the
+[tagged native build instructions](https://github.com/Get-Coral/aurora/tree/v1.16.0#native-setup)
+for packaging and dependencies.
+
+### Desktop and Meta Quest
+
+- **macOS and Windows** use the Tauri desktop build. Run `pnpm desktop:build`
+  on the target platform after installing the prerequisites in the
+  [desktop build guide](https://github.com/Get-Coral/aurora/tree/v1.16.0#desktop-app-macos--windows).
+- **Meta Quest** uses a separate Android build flavor. With a developer-enabled
+  headset connected, run `pnpm android:quest:install`. Aurora opens in a 2D
+  panel. Select **Watch in the theater** in the player to enter an immersive
+  environment. See [Meta Quest builds](https://github.com/Get-Coral/aurora/tree/v1.16.0#meta-quest-builds).
+
+These instructions build from the tagged source. Store availability depends
+on the platform's release process.
 
 ## Contributing
 
