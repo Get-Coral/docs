@@ -37,10 +37,10 @@ export interface CoralModule {
 export const modules: CoralModule[] = [
 	{
 		slug: "aurora",
-		name: "Aurora",
+		name: "Aurora Cinema",
 		repo: "aurora",
 		summary:
-			"Aurora is a cinematic web frontend for Jellyfin. It runs as one Docker container, reads your libraries over the Jellyfin API, and reports playback progress back to Jellyfin.",
+			"Aurora Cinema is a media client for Jellyfin and your own IPTV sources. The web app runs in Docker and reports Jellyfin watch progress back to the server.",
 		status: "shipping",
 		statusNote:
 			"The most complete module. Rails, detail pages, search, playback reporting, TV mode, EN/NL translations, and PWA and Capacitor wrappers.",

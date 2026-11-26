@@ -1,12 +1,12 @@
 ---
-title: Aurora
-description: Set up Aurora for Jellyfin or IPTV. Learn how to configure Docker, add IPTV sources, and build for TV, desktop, and Meta Quest.
+title: Aurora Cinema
+description: Set up Aurora Cinema for Jellyfin or IPTV. Learn how to configure Docker, add IPTV sources, and build for TV, desktop, and Meta Quest.
 ---
 
-Aurora is a media client for a Jellyfin server, your own IPTV sources, or both.
+Aurora Cinema is a media client for a Jellyfin server, your own IPTV sources, or both.
 
 :::note[Shipping]
-The setup below covers [Aurora 1.16.0](https://github.com/Get-Coral/aurora/releases/tag/v1.16.0).
+The setup below covers [Aurora Cinema 1.17.0](https://github.com/Get-Coral/aurora/releases/tag/v1.17.0).
 :::
 
 ## Highlights
@@ -83,7 +83,7 @@ Aurora will be available at `http://localhost:3000`.
 
 Configure Jellyfin in setup or via environment variables. Self-hosted IPTV
 also needs a server-side origin allowlist. The variables below are checked
-against [Aurora's tagged `.env.example`](https://github.com/Get-Coral/aurora/blob/v1.16.0/.env.example)
+against [Aurora's tagged `.env.example`](https://github.com/Get-Coral/aurora/blob/v1.17.0/.env.example)
 and runtime configuration.
 
 | Variable | Purpose |
@@ -124,16 +124,16 @@ nothing.
 3. Add an **Xtream Codes** server with its credentials, an **M3U playlist URL**,
    or a **direct stream URL**. Add an optional XMLTV URL if your provider
    supplies a separate programme guide.
-4. Open **Live TV** to browse channels and the guide. Available films and series
-   depend on the source.
+4. Open **Live TV** for channels and the guide. Open **Films** or **Series** for
+   the provider’s on-demand catalog. If Jellyfin is also connected, its library
+   appears in those same views.
 
-When IPTV is enabled alongside Jellyfin, Aurora can show provider content
-alongside your library. The provider guide and catch-up depend on the source.
+The guide, catch-up and on-demand catalog depend on the IPTV source.
 Use Jellyfin's own client for its tuner and DVR features.
 
 If a provider redirects to other public origins for playback, check whether
 strict origins are enabled. See the
-[release README](https://github.com/Get-Coral/aurora/tree/v1.16.0#iptv-sources)
+[release README](https://github.com/Get-Coral/aurora/tree/v1.17.0#iptv-sources)
 for provider-specific playback and FFmpeg options.
 
 ## User Profiles & Sign-In
@@ -149,6 +149,12 @@ Aurora supports shared households out of the box:
 Move along the progress bar to preview a scene when thumbnails are available.
 The bar also shows the buffered range. Click or drag the seek control to jump
 to another point, including in Safari.
+
+On Android phones, tablets and TVs, file-based IPTV films and episodes open in the native
+player. The title’s artwork stays visible while the stream loads. For Dolby
+audio that the device cannot decode, the native player can use its bundled
+FFmpeg decoder. Self-hosted browser playback uses the server’s FFmpeg and
+ffprobe settings for streams that need conversion.
 
 ## Deployment
 
@@ -174,21 +180,22 @@ for that workflow.
 ### Android TV and Google TV
 
 The Android build has a TV launcher entry and remote navigation. Use the
-directional pad and OK to browse. In the live player, Up/Down or the channel
+directional pad and OK to browse the denser rows. When the native player’s
+controls open, focus starts on Play. In the live player, Up/Down or the channel
 buttons change channels. To test from source, select an Android TV device or
 emulator and run `pnpm cap:run:android`. See the
-[tagged native build instructions](https://github.com/Get-Coral/aurora/tree/v1.16.0#native-setup)
+[tagged native build instructions](https://github.com/Get-Coral/aurora/tree/v1.17.0#native-setup)
 for packaging and dependencies.
 
 ### Desktop and Meta Quest
 
 - **macOS and Windows** use the Tauri desktop build. Run `pnpm desktop:build`
   on the target platform after installing the prerequisites in the
-  [desktop build guide](https://github.com/Get-Coral/aurora/tree/v1.16.0#desktop-app-macos--windows).
+  [desktop build guide](https://github.com/Get-Coral/aurora/tree/v1.17.0#desktop-app-macos--windows).
 - **Meta Quest** uses a separate Android build flavor. With a developer-enabled
   headset connected, run `pnpm android:quest:install`. Aurora opens in a 2D
   panel. Select **Watch in the theater** in the player to enter an immersive
-  environment. See [Meta Quest builds](https://github.com/Get-Coral/aurora/tree/v1.16.0#meta-quest-builds).
+  environment. See [Meta Quest builds](https://github.com/Get-Coral/aurora/tree/v1.17.0#meta-quest-builds).
 
 These instructions build from the tagged source. Store availability depends
 on the platform's release process.
